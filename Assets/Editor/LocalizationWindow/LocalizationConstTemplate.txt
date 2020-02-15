@@ -1,0 +1,6 @@
+﻿public class LocalizationConst
+{
+	>:FOREVERY variables:<
+	public const string >:[0]:<  = ">:[1]:<";
+	>:ENDFOREVERY:<
+}
