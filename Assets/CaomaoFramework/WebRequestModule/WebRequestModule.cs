@@ -120,5 +120,27 @@ namespace CaomaoFramework
         {
             
         }
+
+        public void LoadLocalText(string url, Action<string> callback, Action error)
+        {
+            CaomaoDriver.Instance.StartCoroutine(CLoadLocalText(url, callback, error));
+        }
+        private IEnumerator CLoadLocalText(string url, Action<string> callback, Action error)
+        {
+            //从本地加载dll
+            using (UnityWebRequest www = UnityWebRequest.Get(url))
+            {
+                yield return www.SendWebRequest();
+                if (www.isNetworkError || string.IsNullOrEmpty(www.error) == false)
+                {
+                    error?.Invoke();
+                    yield break;
+                }
+                else if (www.isDone)
+                {
+                    callback?.Invoke(www.downloadHandler.text);
+                }
+            }
+        }
     }
 }

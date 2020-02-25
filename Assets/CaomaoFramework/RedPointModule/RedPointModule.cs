@@ -14,7 +14,7 @@ namespace CaomaoFramework
         public void Init()
         {
             //通过数据初始化树状结构
-            CaomaoDriver.ResourceModule.LoadAsset(CaomaoGameGobalConfig.Instance.RedPointTreePath,(temp)=>
+            CaomaoDriver.ResourceModule.LoadAssetAsync(CaomaoGameGobalConfig.Instance.RedPointTreePath,(temp)=>
             {
                 var asset = temp as RedPointTreeDataConfig;
                 if (asset != null && asset.TreeNode != null)

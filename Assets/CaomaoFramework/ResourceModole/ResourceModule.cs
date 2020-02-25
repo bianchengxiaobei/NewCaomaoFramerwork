@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceProviders;
+using UnityEngine.AddressableAssets.ResourceLocators;
 using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 namespace CaomaoFramework
@@ -20,6 +21,7 @@ namespace CaomaoFramework
         private Action m_aLoadedFinsihedEventHandler;
         private Queue<ResourceBaseTask> m_queueTasks = new Queue<ResourceBaseTask>();
         private bool m_bIsLoading = false;
+        private bool m_bIsInited = false;
         //private float m_fProgressValue = 0;
         /// <summary>
         /// 加载进度
@@ -80,7 +82,12 @@ namespace CaomaoFramework
         /// </summary>
         public void Init()
         {
-            Addressables.InitializeAsync();
+            Addressables.InitializeAsync().Completed += this.SetInit;
+        }
+        private void SetInit(AsyncOperationHandle<IResourceLocator> obj)
+        {
+            this.m_bIsInited = true;
+            Debug.Log("11123423");
         }
         public void Clear()
         {
@@ -146,12 +153,32 @@ namespace CaomaoFramework
                 }
             }
         }
-        public void LoadGameObject(string objPath, AssetLoadFinishedEventHandler<GameObject> callback)
+        public void LoadGameObjectAsync(string objPath, AssetLoadFinishedEventHandler<GameObject> callback)
         {
             //this.m_eCurAssetType = EAssetType.None;
             //this.LoadGameObjectAsyn(objPath, callback,false);
             this.AddGameObjectTask(objPath, callback);
         }
+
+        public GameObject LoadGameObject(string objPath)
+        {
+            if (this.m_bIsInited == false)
+            {
+                return null;
+            }
+            throw new Exception("暂时不支持同步加载，请使用同步加载");
+            var op = Addressables.InstantiateAsync(objPath);
+            if (op.IsDone == false)
+            {
+                throw new Exception("暂时不支持同步加载");
+            }
+            if (op.Result == null)
+            {
+                throw new Exception("暂时不支持同步加载");
+            }
+            return op.Result;
+        }
+
         private async void LoadGameObjectAsyn(string objPath, AssetLoadFinishedEventHandler<GameObject> callback,bool bCheck = true)
         {
             try
@@ -171,7 +198,7 @@ namespace CaomaoFramework
                 Debug.LogException(e);
             }
         }
-        public void LoadScene(string sceneName,AssetLoadFinishedEventHandler<SceneInstance> callback,bool addtive = false)
+        public void LoadSceneAsync(string sceneName,AssetLoadFinishedEventHandler<SceneInstance> callback,bool addtive = false)
         {
             //this.m_eCurAssetType = EAssetType.Scene;
             //this.LoadSceneAsync(sceneName, callback,addtive,false);  
@@ -196,7 +223,7 @@ namespace CaomaoFramework
                 Debug.LogException(e);
             }
         }
-        public void LoadAsset(string assetName, AssetLoadFinishedEventHandler<Object> callback)
+        public void LoadAssetAsync(string assetName, AssetLoadFinishedEventHandler<Object> callback)
         {
             this.AddAssetTask(assetName, callback);
         }
@@ -260,8 +287,6 @@ namespace CaomaoFramework
         public void UnloadResource(Object asset)
         {
             Addressables.Release(asset);
-        }
-
-       
+        }     
     }
 }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace CaomaoFramework
 {
-    public class HotFixModule : IHotFixModule, IModule
+    public class HotFixModule : IHotFixModule
     {
         private IHotFixModule m_hotfixImp = new ILRuntimeHotFixImp();
         public void Init()

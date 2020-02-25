@@ -147,7 +147,7 @@ namespace CaomaoFramework
             {
                 Debug.LogError("Window Create Error ResName is empty!");
             }
-            CaomaoDriver.ResourceModule.LoadGameObject(this.m_sResName,(UIObj)=>
+            CaomaoDriver.ResourceModule.LoadGameObjectAsync(this.m_sResName,(UIObj)=>
             {
                 if (UIObj != null)
                 {

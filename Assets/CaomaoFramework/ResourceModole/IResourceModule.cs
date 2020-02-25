@@ -19,11 +19,13 @@ namespace CaomaoFramework
 
         void Clear();
 
-        void LoadGameObject(string objPath, AssetLoadFinishedEventHandler<GameObject> callback);
-        void LoadAsset(string assetName, AssetLoadFinishedEventHandler<Object> callback);
+        void LoadGameObjectAsync(string objPath, AssetLoadFinishedEventHandler<GameObject> callback);
+        void LoadAssetAsync(string assetName, AssetLoadFinishedEventHandler<Object> callback);
 
         //void LoadAsset<T>(string assetName, AssetLoadFinishedEventHandler<T> callback) where T : Object;
-        void LoadScene(string sceneName, AssetLoadFinishedEventHandler<SceneInstance> callback, bool addtive = false);
+        void LoadSceneAsync(string sceneName, AssetLoadFinishedEventHandler<SceneInstance> callback, bool addtive = false);
+        [Obsolete("暂时不支持同步加载")]
+        GameObject LoadGameObject(string objPath);
         //void LoadAudioClip(string audioClip, AssetLoadFinishedEventHandler<AudioClip> callback);
         //void LoadSprite(string atlas, string spriteName, AssetLoadFinishedEventHandler<Sprite> callback);
         void AddGameObjectTask(string objPath, AssetLoadFinishedEventHandler<GameObject> callback);

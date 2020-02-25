@@ -13,5 +13,7 @@ namespace CaomaoFramework
         public string HotFixDllName;
         [LabelText("热更新pdb")]
         public string HotFixPdbName;
+        [LabelText("配置文件所在的文件目录")]
+        public string ConfigPathDir;
     }
 }

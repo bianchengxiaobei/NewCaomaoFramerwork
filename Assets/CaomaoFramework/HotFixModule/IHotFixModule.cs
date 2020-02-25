@@ -4,10 +4,8 @@ using System.Collections.Generic;
 
 namespace CaomaoFramework
 { 
-    public interface IHotFixModule
+    public interface IHotFixModule : IModule
     {
-        void Init();
-        void Update();
 
         void LoadScript();
     }

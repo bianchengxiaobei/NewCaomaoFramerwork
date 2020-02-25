@@ -1,62 +1,88 @@
-﻿using CaomaoFramework;
+﻿using System;
 using UnityEngine;
-using System.Collections.Generic;
-using System;
-using UnityEngine.AddressableAssets;
-using UnityEngine.ResourceManagement.AsyncOperations;
-using UnityEngine.ResourceManagement.ResourceProviders;
+using Unity.Collections.LowLevel.Unsafe;
+using Unity.IO.LowLevel.Unsafe;
+using Unity.Collections;
+using Unity.Jobs;
+using System.IO;
+using CaomaoFramework;
+using UnityEngine.Profiling;
+using System.Diagnostics;
+using Debug = UnityEngine.Debug;
 public class Test : MonoBehaviour
 {
-    // Start is called before the first frame update
-    private LocalizationData data;
-    private void Awake()
+    public PathFindModule module;
+    private long time;
+    private int count = 10;
+    private Stopwatch timer = new Stopwatch();
+    //private Action<>
+    private void Start()
     {
-        this.LoadAD();
-    }
-    private async void LoadAD()
-    {
-        data = await Addressables.LoadAssetAsync<LocalizationData>("Localization_中国").Task;
-        Debug.Log(data);
-    }
-    private void OnEnable()
-    {
-       
-    }
-    void Start()
-    {
-        
-    }
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-}
-[Serializable]
-public class A : IModule
-{
-    public int a;
-    public void Init()
-    {
-        Debug.Log("A:Init");
+        //module = new PathFindModule();
+        //module.Init();
+
+        //module.StartFind2DPath(FPVector2.down, FPVector2.left, (ok) => 
+        //{
+        //    Debug.Log(ok.Length);
+        //    foreach (var a in ok)
+        //    {
+        //        Debug.Log(a);
+        //    }
+        //    ok.Dispose();
+        //});
+        //module.StartFind2DPath(FPVector2.down, FPVector2.left, (ok) =>
+        //{
+        //    Debug.Log(ok.Length);
+        //    foreach (var a in ok)
+        //    {
+        //        Debug.Log(a);
+        //    }
+        //    ok.Dispose();
+        //});
+        var temp = new NativeArray<JobHandle>(this.count, Allocator.Temp);
+        var jobs = new NativeArray<int>[this.count];
+        for (int i = 0; i < this.count; i++)
+        {
+            var j = new Job1();
+            j.a = new NativeArray<int>(1, Allocator.TempJob);
+            jobs[i] = j.a;
+            var handler = j.Schedule();
+            temp[i] = handler;
+        }
+        JobHandle.CompleteAll(temp);
+        for (int i = 0; i < this.count; i++)
+        {
+            Debug.Log(jobs[i][0]);
+            //jobs[i].Dispose();
+        }      
+        temp.Dispose();
     }
 
-    public void Update()
+    private void OK(NativeArray<int> a)
     {
-        Debug.Log("A");
+
+    }
+    private void Update()
+    {
+      
+    } 
+}
+public struct Job1 : IJob
+{
+    public NativeArray<int> a;
+
+    public void Execute()
+    {
+        //Debug.Log("111");
+        a[0] = 1;
     }
 }
-[Serializable]
-public class B : IModule
+public struct Job2 : IJobParallelFor
 {
-    public string b;
-    public void Init()
+    public NativeArray<int> a;
+    public void Execute(int index)
     {
-        Debug.Log("B:Init");
-    }
-
-    public void Update()
-    {
-        Debug.Log("B");
+        var temp = a[index];
+        a[index] = temp + temp;
     }
 }

@@ -41,6 +41,12 @@ namespace CaomaoFramework
         {
             return (int)(x + y);
         }
+
+        public override string ToString()
+        {
+            return $"({this.x},{this.y})";
+        }
+
         public static FP Distance(FPVector2 value1, FPVector2 value2)
         {
             FP result = DistanceTwo(value1,value2);

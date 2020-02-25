@@ -16,6 +16,7 @@ namespace CaomaoFramework
         public static IHotFixModule HotFixModule;
         public static ITimerModule TimerModule;
         public static IAudioModule AudioModule;
+        public static IDataModule DataModule;
 
 
         public static CaomaoGameGobalConfig GlobalConfig;
@@ -110,6 +111,7 @@ namespace CaomaoFramework
             HotFixModule = this.CreateModule<HotFixModule>();
             TimerModule = this.CreateModule<TimerModule>();
             AudioModule = this.CreateModule<AudioModule>();
+            DataModule = this.CreateModule<DataModule>();
             this.modules.Awake();
         }
         private void Start()

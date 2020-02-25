@@ -77,7 +77,7 @@ namespace CaomaoFramework
 
         private void ChangeLangDic()
         {
-            CaomaoDriver.ResourceModule.LoadAsset(this.GetLocalizationFileLabel(), (asset) =>
+            CaomaoDriver.ResourceModule.LoadAssetAsync(this.GetLocalizationFileLabel(), (asset) =>
             {
                 var dic = ((LocalizationData)asset).data;
                 foreach (var data in dic)
