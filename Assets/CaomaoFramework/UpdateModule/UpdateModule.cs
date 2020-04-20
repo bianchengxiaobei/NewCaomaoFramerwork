@@ -2,15 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
-using Newtonsoft.Json;
+//using Newtonsoft.Json;
 namespace CaomaoFramework
 {
     /// <summary>
     /// 需要配合打包工具
     /// </summary>
     [Module(true)]
-    public class UpdateModule : IUpdateModule, IModule
+    public class UpdateModule : IUpdateModule
     {
+        private IUpdateModule m_updateImp;
         private UpdateProgressArgs progressArgs = new UpdateProgressArgs();
         private Action<string> m_actionUpdateFailed;
         private Action m_actionUpdateFinished;
@@ -33,14 +34,16 @@ namespace CaomaoFramework
             if (this.HasNetwork())
             {
                 this.CheckFirstIntoGame();
-                this.m_oLocalVersionInfo = JsonConvert.DeserializeObject<UpdateVersionInfo>(this.m_localVersionContent);
+                this.m_oLocalVersionInfo = JsonUtility.FromJson<UpdateVersionInfo>(this.m_localVersionContent);
+                //this.m_oLocalVersionInfo = JsonConvert.DeserializeObject<UpdateVersionInfo>(this.m_localVersionContent);
                 var url = this.LoadRemoteUrl();
                 if (string.IsNullOrEmpty(url) == false)
                 {
                     this.DownloadVersion(url, (text) =>
                     {
                         //比对
-                        this.m_oRemoteVersionInfo = JsonConvert.DeserializeObject<UpdateVersionInfo>(text);
+                        this.m_oRemoteVersionInfo = JsonUtility.FromJson<UpdateVersionInfo>(text);
+                        //this.m_oRemoteVersionInfo = JsonConvert.DeserializeObject<UpdateVersionInfo>(text);
                         if (this.m_oRemoteVersionInfo.Version != this.m_oLocalVersionInfo.Version)
                         {
                             foreach (var info in this.m_oRemoteVersionInfo.FileMd5)

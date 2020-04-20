@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.ResourceManagement.ResourceProviders;
 using Object = UnityEngine.Object;
 namespace CaomaoFramework
@@ -19,18 +20,18 @@ namespace CaomaoFramework
 
         void Clear();
 
-        void LoadGameObjectAsync(string objPath, AssetLoadFinishedEventHandler<GameObject> callback);
-        void LoadAssetAsync(string assetName, AssetLoadFinishedEventHandler<Object> callback);
+        void LoadGameObjectAsync(string objPath, AssetLoadFinishedEventHandler<GameObject> callback,bool bStart = false);
+        void LoadAssetAsync(string assetName, AssetLoadFinishedEventHandler<Object> callback,bool bStart = false);
 
         //void LoadAsset<T>(string assetName, AssetLoadFinishedEventHandler<T> callback) where T : Object;
-        void LoadSceneAsync(string sceneName, AssetLoadFinishedEventHandler<SceneInstance> callback, bool addtive = false);
+        void LoadSceneAsync(string sceneName, AssetLoadFinishedEventHandler<SceneInstance> callback,LoadSceneMode mode,bool bStart = false);
         [Obsolete("暂时不支持同步加载")]
         GameObject LoadGameObject(string objPath);
         //void LoadAudioClip(string audioClip, AssetLoadFinishedEventHandler<AudioClip> callback);
         //void LoadSprite(string atlas, string spriteName, AssetLoadFinishedEventHandler<Sprite> callback);
         void AddGameObjectTask(string objPath, AssetLoadFinishedEventHandler<GameObject> callback);
         void AddAssetTask(string objPath, AssetLoadFinishedEventHandler<Object> callback);
-        void AddSceneTask(string objPath, AssetLoadFinishedEventHandler<SceneInstance> callback);
+        void AddSceneTask(string objPath, LoadSceneMode mode, AssetLoadFinishedEventHandler<SceneInstance> callback);
         void StartLoad();
         void SetAllLoadFinishedEventHandler(Action eventHandler);
         /// <summary>

@@ -46,7 +46,14 @@ namespace CaomaoFramework
             this.appdomain.Invoke(initMethod, null, null);
             this.m_hotFixUpdateMethod = this.m_hotFixEnter.GetMethod("Update", 0);
             //更新完成后进入热更dll的代码执行
+            CaomaoDriver.UIModule.AddUI(nameof(UIRedPoint), new UIRedPoint());
+            CaomaoDriver.UIModule.GetUI(nameof(UIRedPoint)).Show();
+
+
+
+
             //CaomaoDriver.GameStateModule.ChangeGameState("TestState", ELoadingType.LoadingNormal, null);
+            //CaomaoDriver.UIModule.GetUI("UITest").PreLoad();
             //CaomaoDriver.TimerModule.AddTimerTask(0, 1000,this.Test,false);
             //CaomaoDriver.AudioModule.PlayBGMusic("Login_Music");
             //CaomaoDriver.DataModule.GetDataAsyn<TestData>((asset) =>
@@ -69,7 +76,6 @@ namespace CaomaoFramework
             //    Debug.Log("333");
             //});
             //CaomaoDriver.ResourceModule.StartLoad();
-            //Debug.Log("1111");
         }
         private void Test()
         {
@@ -114,6 +120,7 @@ namespace CaomaoFramework
         }
         private void LoadDllError()
         {
+            Debug.LogError("ILRuntime Load Error");
             this.m_actionError?.Invoke(CaomaoDriver.LocalizationModule.GetString(LocalizationConst.HotFixError));
         }
     }

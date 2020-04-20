@@ -90,7 +90,7 @@ namespace CaomaoFramework
             }
             if (this.m_sCurPlayingBGMusicName != bgMusicName)
             {
-                CaomaoDriver.ResourceModule.LoadAssetAsync(bgMusicName, this.LoadBGMusicFinished);
+                CaomaoDriver.ResourceModule.LoadAssetAsync(bgMusicName, this.LoadBGMusicFinished,true);
                 this.m_sCurPlayingBGMusicName = bgMusicName;
             }
             else if (this.m_oBGMusicSource.isPlaying == false)

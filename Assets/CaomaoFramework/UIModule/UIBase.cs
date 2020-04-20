@@ -87,7 +87,7 @@ namespace CaomaoFramework
             }
             else if (m_oRoot && m_oRoot.gameObject.activeSelf == false)
             {
-                m_oRoot.SetAsFirstSibling();
+                this.GoToForwardLayer();
                 m_oRoot.gameObject.SetActive(true);
                 m_bVisible = true;
                 OnEnable();
@@ -121,7 +121,7 @@ namespace CaomaoFramework
         {
             if (m_oRoot == null)
             {
-                CreateUI();
+                PreLoadUI();
             }
         }
 
@@ -173,9 +173,39 @@ namespace CaomaoFramework
                 {
                     Debug.LogError($"加载UI Prefab失败:{m_sResName}");
                 }
-            });      
+            });
         }
+        protected virtual void PreLoadUI() 
+        {
+            if (m_oRoot)
+            {
+                Debug.LogError("Window Create Error Exist!");
+            }
 
+            if (m_sResName == null || m_sResName == "")
+            {
+                Debug.LogError("Window Create Error ResName is empty!");
+            }
+            CaomaoDriver.ResourceModule.AddGameObjectTask(this.m_sResName, (UIObj) =>
+            {
+                if (UIObj != null)
+                {
+                    this.m_oRoot = UIObj.transform;
+                    this.m_rectTransform = this.m_oRoot.GetComponent<RectTransform>();
+                    this.m_oRoot.SetParent(CaomaoDriver.UIRoot);
+                    this.m_rectTransform.sizeDelta = Vector2.zero;
+                    this.m_oRoot.localPosition = Vector3.zero;
+                    this.m_oRoot.localRotation = Quaternion.identity;
+                    this.m_oRoot.localScale = Vector3.one;
+                    this.m_oRoot.gameObject.SetActive(false);//设置为隐藏
+                    InitGraphicComponet();
+                }
+                else
+                {
+                    Debug.LogError($"加载UI Prefab失败:{m_sResName}");
+                }
+            });
+        }
         //销毁窗体
         protected void Destroy()
         {

@@ -5,8 +5,8 @@ namespace CaomaoFramework
 {
     public class GameModules
     {
-        private IModule[] m_arrayAllUpdateModules = new IModule[9];
-        private IModule[] m_arrayAllNoUpdateModules = new IModule[9];
+        private IModule[] m_arrayAllUpdateModules = new IModule[10];
+        private IModule[] m_arrayAllNoUpdateModules = new IModule[10];
         private int m_iUpdateIndex = 0;
         private int m_iNoUpdateIndex = 0;
         public void Awake()

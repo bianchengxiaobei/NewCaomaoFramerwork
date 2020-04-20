@@ -1,6 +1,5 @@
 ﻿using System;
 using Unity.Collections;
-
 namespace CaomaoFramework
 {
     public struct PathBHNode

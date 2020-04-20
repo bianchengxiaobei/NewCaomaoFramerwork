@@ -7,7 +7,7 @@ namespace CaomaoFramework
     public struct PathNode
     {
         public int ParentIndex;
-        public ushort PathIndex;
+        public int PathIndex;
         public uint G
         {
             get;set;

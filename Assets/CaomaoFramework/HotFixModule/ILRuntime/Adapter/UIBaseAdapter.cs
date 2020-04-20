@@ -40,7 +40,9 @@ public class UIBaseApadater : CrossBindingAdaptor
 
 
         private IMethod m_createUI;
+        private IMethod m_preloadUI;
         private bool m_bCreateUIInvoke;
+        private bool m_bPreloadUIInvoke;
         private IMethod m_update;
         private bool m_bUpdateInvoke;
         private IMethod m_goToForwardLayer;
@@ -78,6 +80,24 @@ public class UIBaseApadater : CrossBindingAdaptor
             {
                 base.CreateUI();
             }            
+        }
+
+        protected override void PreLoadUI()
+        {
+            if (this.m_preloadUI == null)
+            {
+                this.m_preloadUI = instance.Type.GetMethod("PreLoadUI", 0);
+            }
+            if (this.m_preloadUI != null && this.m_bPreloadUIInvoke == false)
+            {
+                this.m_bPreloadUIInvoke = true;
+                this.appdomain.Invoke(this.m_preloadUI, this.instance, null);
+                this.m_bPreloadUIInvoke = false;
+            }
+            else
+            {
+                base.PreLoadUI();
+            }
         }
 
         public override void Update()

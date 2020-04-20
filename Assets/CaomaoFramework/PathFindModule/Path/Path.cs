@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Unity.Mathematics;
 namespace CaomaoFramework
 {
     public struct PathBase
@@ -12,18 +11,18 @@ namespace CaomaoFramework
     }
     public struct Path2D
     {
-        public FPVector2 StartPos
+        public float2 StartPos
         {
             get;
             private set;
         }
-        public FPVector2 EndPos
+        public float2 EndPos
         {
             get;
             private set;
         }
 
-        public Path2D(FPVector2 start, FPVector2 end)
+        public Path2D(float2 start, float2 end)
         {
             this.StartPos = start;
             this.EndPos = end;

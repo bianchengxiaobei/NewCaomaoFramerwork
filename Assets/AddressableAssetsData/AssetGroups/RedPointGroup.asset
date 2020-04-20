@@ -16,11 +16,7 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: 5522c2fd596dd7f4fbc9544c06da3b4e
-  m_SerializeEntries:
-  - m_GUID: d75d842ae85801549bb7a355dece1a75
-    m_Address: RedPointTreeDataConfig
-    m_ReadOnly: 0
-    m_SerializedLabels: []
+  m_SerializeEntries: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 54be41db46d1fa54e855f2d070e86fc9, type: 2}
   m_SchemaSet:

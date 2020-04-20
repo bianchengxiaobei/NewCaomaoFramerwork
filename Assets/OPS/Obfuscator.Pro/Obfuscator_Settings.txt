@@ -1,5 +1,5 @@
 ObfuscateGlobally
-1
+0
 AllAsmdefAssemblies
 0
 AdditionalAssemblyList

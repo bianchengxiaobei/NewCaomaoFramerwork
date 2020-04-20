@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
+//using Newtonsoft.Json;
 using System.IO;
+using UnityEngine;
 namespace CaomaoFramework
 {
     public class JsonParser : IDataParser
@@ -11,7 +12,8 @@ namespace CaomaoFramework
             var path = $"{CaomaoGameGobalConfig.Instance.ConfigPathDir}/{data.FilePath}";
             CaomaoDriver.WebRequestModule.LoadLocalText(path, (content)=> 
             {
-                JsonConvert.PopulateObject(content,data);
+                JsonUtility.FromJsonOverwrite(content, data);
+                //JsonConvert.PopulateObject(content,data);
                 callback?.Invoke(data);
             }, error);
             
@@ -23,7 +25,8 @@ namespace CaomaoFramework
                 //同步加载
                 var path = $"{CaomaoGameGobalConfig.Instance.ConfigPathDir}/{data.FilePath}";
                 var content = File.ReadAllText(path);
-                JsonConvert.PopulateObject(content, data);
+                JsonUtility.FromJsonOverwrite(content, data);
+                //JsonConvert.PopulateObject(content,data);
             }
             catch
             {

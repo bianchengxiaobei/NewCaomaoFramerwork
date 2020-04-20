@@ -8,9 +8,10 @@ namespace CaomaoFramework
         {
             this.Id = id;
         }
-        protected Dictionary<string, IRedPointData> Childs = new Dictionary<string, IRedPointData>();
+        public Dictionary<string, IRedPointData> Childs = new Dictionary<string, IRedPointData>();
         protected string Id { get; set; }
         public bool bShow { get; set; }
+
 
         private Action m_actionUIEvent;
         public abstract void SetData(string data);
@@ -31,6 +32,17 @@ namespace CaomaoFramework
                 return true;
             }
             return this.Childs.TryGetValue(id, out data);
+        }
+
+
+        public void NotifyRedPoint(bool bShow) 
+        {
+            this.bShow = bShow;
+            this.Callback();
+            foreach (var child in this.Childs) 
+            {
+                child.Value.NotifyRedPoint(bShow);
+            }
         }
 
         public void RegisterUIEvent(Action callback)

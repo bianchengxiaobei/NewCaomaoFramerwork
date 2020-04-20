@@ -1,13 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 using Sirenix.OdinInspector;
-using Sirenix.Utilities;
 namespace CaomaoFramework
 {
-    [GlobalConfig("Assets/CaomaoFramework/RedPointModule/")]
-    public class RedPointTreeDataConfig : GlobalConfig<RedPointTreeDataConfig>
+    public class RedPointTreeDataConfig : CaomaoRuntimeGlobalSBConfig<RedPointTreeDataConfig>
     {
         public RedPointTreeData TreeNode;
+        //private static RedPointTreeDataConfig m_instance;
+        //public static RedPointTreeDataConfig Instance
+        //{
+        //    get
+        //    {
+        //        if (m_instance == null)
+        //        {
+        //            m_instance = Resources.Load<RedPointTreeDataConfig>("RedPointTreeDataConfig");
+        //        }
+        //        return m_instance;
+        //    }
+        //}
     }
     [Serializable]
     public class RedPointTreeData

@@ -31,7 +31,7 @@ namespace CaomaoFramework
 
         public abstract void SetCallback(Delegate callback);
     }
-    [AInstanceNumber(2)]
+    [CInstanceNumber(2)]
     public class TimerData : TimerBase
     {
         private Action callback;
@@ -58,7 +58,7 @@ namespace CaomaoFramework
         }
     }
 
-    [AInstanceNumber(2)]
+    [CInstanceNumber(2)]
     public class TimerData<T> : TimerBase
     {
         private Action<T> callback;
@@ -94,7 +94,7 @@ namespace CaomaoFramework
             this.callback = null;
         }
     }
-    [AInstanceNumber(2)]
+    [CInstanceNumber(2)]
     public class TimerData<T, V> : TimerBase
     {
         private Action<T,V> callback;

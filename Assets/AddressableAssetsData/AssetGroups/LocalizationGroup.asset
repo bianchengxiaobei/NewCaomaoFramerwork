@@ -20,8 +20,11 @@ MonoBehaviour:
   - m_GUID: eea8382a523c4534286d627624b3ff12
     m_Address: "Localization_\u4E2D\u56FD"
     m_ReadOnly: 0
-    m_SerializedLabels:
-    - default
+    m_SerializedLabels: []
+    m_mainAssetType: LocalizationData, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+    m_MainAsset: {fileID: 11400000, guid: eea8382a523c4534286d627624b3ff12, type: 2}
+    m_TargetAsset: {fileID: 11400000, guid: eea8382a523c4534286d627624b3ff12, type: 2}
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 54be41db46d1fa54e855f2d070e86fc9, type: 2}
   m_SchemaSet:

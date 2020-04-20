@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceProviders;
-using UnityEngine.AddressableAssets.ResourceLocators;
 using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 namespace CaomaoFramework
@@ -82,13 +81,17 @@ namespace CaomaoFramework
         /// </summary>
         public void Init()
         {
-            Addressables.InitializeAsync().Completed += this.SetInit;
+            this.InitAddressable();            
         }
-        private void SetInit(AsyncOperationHandle<IResourceLocator> obj)
+        private async void InitAddressable()
         {
+            var a = await Addressables.InitializeAsync().Task;
             this.m_bIsInited = true;
-            Debug.Log("11123423");
         }
+        //private void SetInit(AsyncOperationHandle<IResourceLocator> obj)
+        //{
+            
+        //}
         public void Clear()
         {
            
@@ -113,12 +116,13 @@ namespace CaomaoFramework
             this.m_iAllAssetsNum++;
             this.m_eCurAssetType = EAssetType.None;
         }
-        public void AddSceneTask(string objPath, AssetLoadFinishedEventHandler<SceneInstance> callback)
+        public void AddSceneTask(string objPath, LoadSceneMode mode, AssetLoadFinishedEventHandler<SceneInstance> callback)
         {
-            var task = new ResourceLoadTask<SceneInstance>();
+            var task = new SceneResourceTask<SceneInstance>();
             task.Path = objPath;
             task.Callback = callback;
             task.AssetType = EAssetType.Scene;
+            task.LoadSceneMode = mode;
             this.m_queueTasks.Enqueue(task);
             this.m_iAllAssetsNum++;
             this.m_eCurAssetType = EAssetType.None;
@@ -144,20 +148,25 @@ namespace CaomaoFramework
                         this.LoadGameObjectAsyn(task.Path, (task as ResourceLoadTask<GameObject>).Callback, true);
                         break;
                     case EAssetType.Asset:
-                        var temp = (task as ResourceLoadTask<Object>);
-                        this.LoadAsssetAsync(task.Path, temp.Callback, true);
+                        var assetTask = task as ResourceLoadTask<Object>;
+                        this.LoadAsssetAsync(task.Path, assetTask.Callback, true);
                         break;
                     case EAssetType.Scene:
-                        this.LoadSceneAsync(task.Path, (task as ResourceLoadTask<SceneInstance>).Callback, false,true);
+                        var sceneTask = task as SceneResourceTask<SceneInstance>;
+                        this.InnerLoadSceneAsync(sceneTask.Path, sceneTask.Callback, sceneTask.LoadSceneMode,true);
                         break;
                 }
             }
         }
-        public void LoadGameObjectAsync(string objPath, AssetLoadFinishedEventHandler<GameObject> callback)
+        public void LoadGameObjectAsync(string objPath, AssetLoadFinishedEventHandler<GameObject> callback,bool bStart = false)
         {
             //this.m_eCurAssetType = EAssetType.None;
             //this.LoadGameObjectAsyn(objPath, callback,false);
             this.AddGameObjectTask(objPath, callback);
+            if (bStart) 
+            {
+                this.StartLoad();
+            }
         }
 
         public GameObject LoadGameObject(string objPath)
@@ -198,17 +207,20 @@ namespace CaomaoFramework
                 Debug.LogException(e);
             }
         }
-        public void LoadSceneAsync(string sceneName,AssetLoadFinishedEventHandler<SceneInstance> callback,bool addtive = false)
+        public void LoadSceneAsync(string sceneName,AssetLoadFinishedEventHandler<SceneInstance> callback,LoadSceneMode mode,bool bStart = false)
         {
             //this.m_eCurAssetType = EAssetType.Scene;
             //this.LoadSceneAsync(sceneName, callback,addtive,false);  
-            this.AddSceneTask(sceneName, callback);
+            this.AddSceneTask(sceneName,mode,callback);
+            if (bStart)
+            {
+                this.StartLoad();
+            }
         }
-        private async void LoadSceneAsync(string sceneName, AssetLoadFinishedEventHandler<SceneInstance> callback, bool addtive = false,bool bCheck = true)
+        private async void InnerLoadSceneAsync(string sceneName, AssetLoadFinishedEventHandler<SceneInstance> callback,LoadSceneMode mode,bool bCheck = true)
         {
             try
             {
-                var mode = addtive ? LoadSceneMode.Additive : LoadSceneMode.Single;
                 this.m_oLoadSceneOperation = Addressables.LoadSceneAsync(sceneName,mode);
                 var scene = await this.m_oLoadSceneOperation.Task;
                 if (bCheck)
@@ -223,9 +235,13 @@ namespace CaomaoFramework
                 Debug.LogException(e);
             }
         }
-        public void LoadAssetAsync(string assetName, AssetLoadFinishedEventHandler<Object> callback)
+        public void LoadAssetAsync(string assetName, AssetLoadFinishedEventHandler<Object> callback,bool bStart = false)
         {
             this.AddAssetTask(assetName, callback);
+            if (bStart) 
+            {
+                this.StartLoad();
+            }
         }
 
         //public void LoadAsset<T>(string assetName, AssetLoadFinishedEventHandler<T> callback)where T:Object

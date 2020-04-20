@@ -19,7 +19,7 @@ namespace CaomaoFramework
             {
                 temp.SB = asset as ScriptableObject;
                 callback?.Invoke(data);
-            });
+            },true);
         }
     }
 }

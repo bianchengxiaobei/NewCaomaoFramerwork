@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Unity.Collections;
-
+using Unity.Mathematics;
 namespace CaomaoFramework
 {
     [Module(true)]
@@ -39,7 +39,7 @@ namespace CaomaoFramework
             this.PathfindImp.Init();
         }
 
-        public int StartFind2DPath(FPVector2 startPos, FPVector2 endPos, Action<NativeList<FPVector2>> callback)
+        public int StartFind2DPath(float2 startPos, float2 endPos, Action<NativeList<float2>> callback)
         {
             return this.PathfindImp.StartFind2DPath(startPos, endPos, callback);
         }

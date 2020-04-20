@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using UnityEngine.SceneManagement;
 namespace CaomaoFramework
 {
     public abstract class ResourceBaseTask
@@ -9,12 +10,13 @@ namespace CaomaoFramework
         public EAssetType AssetType = EAssetType.None;
         public abstract void ReclyeSelf(ResourceBaseTask task);
         public abstract void SetCallback(Delegate callback);
-        //public void SetAssetType(EAssetType type)
-        //{
-        //    this.AssetType = type;
-        //}
-
     }
+
+    public class SceneResourceTask<T> : ResourceLoadTask<T>
+    {
+        public LoadSceneMode LoadSceneMode; 
+    }
+
     public class ResourceLoadTask<T> : ResourceBaseTask
     {
         public AssetLoadFinishedEventHandler<T> Callback;

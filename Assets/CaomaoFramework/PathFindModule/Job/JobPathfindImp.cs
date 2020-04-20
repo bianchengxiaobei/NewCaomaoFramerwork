@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Jobs;
 using UnityEngine;
+using Unity.Mathematics;
 namespace CaomaoFramework
 {
     public class JobPathfindImp : IPathFindModule
     {
         private IMap m_oMap;
         private List<Path2D> m_list2dPaths = new List<Path2D>();
-        private List<Action<NativeList<FPVector2>>> m_callbacks = new List<Action<NativeList<FPVector2>>>();
+        private List<Action<NativeList<float2>>> m_callbacks = new List<Action<NativeList<float2>>>();
         private int m_listIndex = 0;
 
         public int MaxFindPathPointCount
@@ -26,7 +27,7 @@ namespace CaomaoFramework
             
         }
 
-        public int StartFind2DPath(FPVector2 startPos, FPVector2 endPos,Action<NativeList<FPVector2>> callback)
+        public int StartFind2DPath(float2 startPos, float2 endPos,Action<NativeList<float2>> callback)
         {
             if (callback == null)
             {
@@ -44,10 +45,11 @@ namespace CaomaoFramework
         {
             if (this.m_listIndex > 0)
             {
+                //如果是完全并行运算
                 if (this.FullParallel)
                 {
                     var paths = new NativeArray<Path2D>(this.m_listIndex, Allocator.TempJob);
-                    var targetPaths = new NativeMultiHashMap<int, FPVector2>(this.m_listIndex * this.MaxFindPathPointCount, Allocator.TempJob);
+                    var targetPaths = new NativeMultiHashMap<int, float2>(this.m_listIndex * this.MaxFindPathPointCount, Allocator.TempJob);
                     for (int i = 0; i < this.m_listIndex; i++)
                     {
                         var path = this.m_list2dPaths[i];
@@ -62,7 +64,7 @@ namespace CaomaoFramework
                     for (int i = 0; i < this.m_listIndex; i++)
                     {
                         var callback = this.m_callbacks[i];
-                        var array = new NativeList<FPVector2>(Allocator.Persistent);
+                        var array = new NativeList<float2>(Allocator.Persistent);
                         foreach (var temp in targetPaths.GetValuesForKey(i))
                         {
                             array.Add(temp);
@@ -77,13 +79,13 @@ namespace CaomaoFramework
                 else
                 {
                     var allJobs = new NativeArray<JobHandle>(this.m_listIndex, Allocator.Temp);
-                    var data = new NativeList<FPVector2>[this.m_listIndex];
+                    var data = new NativeList<float2>[this.m_listIndex];
                     for (int i = 0; i < this.m_listIndex; i++)
                     {
                         var path = this.m_list2dPaths[i];
                         var job = new Job2DPathIJobProcess();
                         job.ABPath = path;
-                        job.Paths = new NativeList<FPVector2>(5,Allocator.TempJob);
+                        job.Paths = new NativeList<float2>(5,Allocator.TempJob);
                         data[i] = job.Paths;
                         allJobs[i] = job.Schedule();
                     }

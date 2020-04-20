@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 namespace CaomaoFramework
 {
-    public interface IUpdateModule
+    public interface IUpdateModule : IModule
     {
         void CheckUpdate();
     }

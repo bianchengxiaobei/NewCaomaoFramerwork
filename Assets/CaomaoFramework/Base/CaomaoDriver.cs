@@ -5,6 +5,7 @@ namespace CaomaoFramework
 {
     public class CaomaoDriver : MonoBehaviour
     {
+        public static GameSettingModule GameSettingModule;
         public static IClientGameStateModule GameStateModule;
         public static IResourceModule ResourceModule;
         public static ISceneLoadModule SceneLoadModule;
@@ -17,7 +18,7 @@ namespace CaomaoFramework
         public static ITimerModule TimerModule;
         public static IAudioModule AudioModule;
         public static IDataModule DataModule;
-
+        public static INewbieHelpModule NewbieHelpModule;
 
         public static CaomaoGameGobalConfig GlobalConfig;
         private GameModules modules = new GameModules();
@@ -100,6 +101,7 @@ namespace CaomaoFramework
             DontDestroyOnLoad(this.gameObject);
             UIRoot = GameObject.FindGameObjectWithTag("UIRoot").transform;
             DontDestroyOnLoad(UIRoot.gameObject);
+            GameSettingModule = this.CreateModule<GameSettingModule>();
             UIModule = this.CreateModule<CUIModule>();
             GameStateModule = this.CreateModule<ClientGameStateModule>();
             ResourceModule = this.CreateModule<ResourceModule>();
@@ -112,6 +114,7 @@ namespace CaomaoFramework
             TimerModule = this.CreateModule<TimerModule>();
             AudioModule = this.CreateModule<AudioModule>();
             DataModule = this.CreateModule<DataModule>();
+            NewbieHelpModule = this.CreateModule<NewbieHelpModule>();
             this.modules.Awake();
         }
         private void Start()

@@ -21,6 +21,20 @@ MonoBehaviour:
     m_Address: UITest
     m_ReadOnly: 0
     m_SerializedLabels: []
+    m_mainAssetType: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 8087640b61f372b478ccb47e66777beb
+    m_Address: UIRedPoint
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_mainAssetType: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+    m_MainAsset: {fileID: 8049702008031033264, guid: 8087640b61f372b478ccb47e66777beb,
+      type: 3}
+    m_TargetAsset: {fileID: 8049702008031033264, guid: 8087640b61f372b478ccb47e66777beb,
+      type: 3}
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 54be41db46d1fa54e855f2d070e86fc9, type: 2}
   m_SchemaSet:

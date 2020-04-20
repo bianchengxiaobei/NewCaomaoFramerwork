@@ -17,10 +17,10 @@ namespace CaomaoFramework
             }
             m_Init = true;
             Type typeFromHandle = typeof(T);
-            object[] customAttributes = typeFromHandle.GetCustomAttributes(typeof(AInstanceNumber), true);
+            object[] customAttributes = typeFromHandle.GetCustomAttributes(typeof(CInstanceNumber), true);
             if (customAttributes != null && customAttributes.Length != 0)
             {
-                AInstanceNumber aInstanceNumber = customAttributes[0] as AInstanceNumber;
+                CInstanceNumber aInstanceNumber = customAttributes[0] as CInstanceNumber;
                 m_activeObjects = new T[aInstanceNumber.Num];
                 m_recyleObjects = new Stack<T>(aInstanceNumber.Num);
             }

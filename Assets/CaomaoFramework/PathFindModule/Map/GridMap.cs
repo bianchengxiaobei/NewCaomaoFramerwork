@@ -148,5 +148,20 @@ namespace CaomaoFramework
         {
             
         }
+
+        public int[] GetNeighbourOffsets()
+        {
+            throw new NotImplementedException();
+        }
+
+        public uint[] GetNeighbourCosts()
+        {
+            throw new NotImplementedException();
+        }
+
+        public MapNode GetMapNode(int nodeIndex)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

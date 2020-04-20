@@ -75,6 +75,16 @@ namespace CaomaoFramework
             return result;
         }
 
+        public void GetSprite(string key,Action<Sprite> onSprite) 
+        {
+            var spriteName = this.GetString(key);
+            CaomaoDriver.ResourceModule.LoadAssetAsync(spriteName, (asset) => 
+            {
+                var temp = asset as Sprite;
+                onSprite?.Invoke(temp);
+            },true);
+        }
+
         private void ChangeLangDic()
         {
             CaomaoDriver.ResourceModule.LoadAssetAsync(this.GetLocalizationFileLabel(), (asset) =>
@@ -84,7 +94,7 @@ namespace CaomaoFramework
                 {
                     this.m_stringDic[data.Key] = data.Value;
                 }
-            });
+            },true);
         }
 
         public void Init()
