@@ -1,6 +1,7 @@
 ﻿using CaomaoFramework;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 /// <summary>
@@ -10,30 +11,34 @@ public class NewbieHelpTipStep : NewbieHelpStep
 {
     public List<NewbieHelpDialogTip> Tips { get; set; }//所有对话
     private int m_iCurIndex = 0;//当前对话所在的索引
-    private static Button UITipObj;
-    public static void Init() 
+    private static CUIHelpTip UITipObj;
+    private NewbieHelpTipStepData StepData;
+    public static void Init()
     {
-        CaomaoDriver.ResourceModule.LoadGameObjectAsync("", (obj) =>
+        CaomaoDriver.ResourceModule.LoadGameObjectAsync("NewbieHelpTip", (obj) =>
         {
-            UITipObj = obj.transform.Find("bt_tip").GetComponent<Button>();            
-            if (UITipObj == null) 
+            UITipObj = obj.GetComponent<CUIHelpTip>();
+            if (UITipObj == null)
             {
                 Debug.LogError("UITip == null");
+                return;
             }
+            //设置父亲节点，让他可以点击
+            CaomaoDriver.NewbieHelpModule.SetUIToRoot(UITipObj.transform);
+            UITipObj.SetVisiable(false);
         });
     }
     public override void Enter()
     {
+        base.Enter();
         //实例化对话。然后设置mask为最上层
         if (UITipObj != null)
         {
-            if (UITipObj.onClick.GetPersistentEventCount() == 0) 
-            {
-                UITipObj.onClick.AddListener(this.NextDialogTip);
-            }
+            UITipObj.AddButtonListener(this.NextDialogTip);
+            //设置新手提示图片的更改
+            UITipObj.SetNewbieHelpStepData(this.StepData,this.m_iCurIndex);
             //显示并且能点击
-            CaomaoDriver.NewbieHelpModule.SetVaildArea(UITipObj.image.rectTransform);
-            UITipObj.transform.position = Vector3.zero;
+            UITipObj.SetVisiable(true);
         }
         else 
         {
@@ -41,6 +46,18 @@ public class NewbieHelpTipStep : NewbieHelpStep
             Init();
         }
     }
+
+    public override void LoadHelpStepData()
+    {
+        var filePath = $"{this.MainID}_{this.ID}.txt";//远程端持久化目录下载 + this.id（归到下载更新里面）
+        this.StepData = CaomaoDriver.DataModule.GetJsonData<NewbieHelpTipStepData>(filePath);
+        if (this.StepData != default(NewbieHelpTipStepData))
+        {
+            //说明读取成功
+
+        }
+    }
+
     /// <summary>
     /// 下一个对话，如果没有就直接结束
     /// </summary>
@@ -57,17 +74,10 @@ public class NewbieHelpTipStep : NewbieHelpStep
     /// <summary>
     /// 清除对话资源
     /// </summary>
-    private void Clear()
+    public override void Clear()
     {
         base.Clear();
         this.m_iCurIndex = 0;
         this.Tips.Clear();
     }
-}
-
-public class NewbieHelpDialogTip
-{
-    public string dialogContent;//对话内容
-    public string characterName;//人物名字
-    public string characterPath;////对话角色资源名称（addressable里面的名称）
 }

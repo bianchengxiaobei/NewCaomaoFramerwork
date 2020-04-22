@@ -4,8 +4,7 @@ using System.Collections.Generic;
 public abstract class NewbieHelpStep
 {
     public int ID { get; set; }//任务id
-    //public string Content { get; set; }//内容
-
+    public int MainID { get; set; }//主任务id
     public Action ActionOnFinished { get; set; }//回调
 
 
@@ -15,7 +14,23 @@ public abstract class NewbieHelpStep
         this.ActionOnFinished?.Invoke();
     }
 
-    public abstract void Enter();//进入，注册一些事件，比如按钮这些
+    /// <summary>
+    /// 加载该步骤引导数据
+    /// </summary>
+    public virtual void LoadHelpStepData()
+    {
+
+    }
+    /// <summary>
+    /// 进入，注册一些事件，比如按钮这些
+    /// </summary>
+    public virtual void Enter()
+    {
+        this.LoadHelpStepData();//加载数据
+    } 
+
+
+
 
 
     public virtual void Clear()

@@ -8,13 +8,24 @@ using Unity.Jobs;
 using System.IO;
 using CaomaoFramework;
 using UnityEngine.Profiling;
+using BatteryStatus = UnityEngine.BatteryStatus;
+
 public class Test : MonoBehaviour
 {
-    public Image a;
-    public CUIHelpMask mask;
+    public Text a;
+    //public CUIHelpMask mask;
     private void Awake()
     {
-        mask.SetArea(a);
+        
+    }
+
+    private void Start()
+    {
+        var tex = a.cachedTextGenerator;
+        var characount = tex.characterCount;
+        var count = tex.characters.Count;
+        Debug.Log(characount);
+        Debug.Log(tex.characters.Count);
     }
 
     private void Update()
