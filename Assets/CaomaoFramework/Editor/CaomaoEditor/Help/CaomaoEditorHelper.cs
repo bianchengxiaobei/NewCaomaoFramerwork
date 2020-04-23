@@ -80,4 +80,56 @@ public class CaomaoEditorHelper
         Debug.LogError("不存在Excel文件:" + filePath);
         return null;
     }
+
+
+
+    //-----------------------------------------Graph相关
+    /// <summary>
+    /// 将图的数据写入到项目中去
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="path"></param>
+    /// <param name="data"></param>
+    /// <returns></returns>
+    public static bool WriteGraphDataToDisk<T>(string path, T data)
+    {
+        if (data == null)
+        {
+            Debug.LogError("data == null");
+            return false;
+        }
+
+        if (string.IsNullOrEmpty(path))
+        {
+            Debug.LogError("Path == null");
+            return false;
+        }
+
+        var content = GraphToJson(data);
+        if (!string.IsNullOrEmpty(content))
+        {
+            try
+            {
+                File.WriteAllText(path,content);
+                return true;
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }
+        }
+        return false;
+    }
+
+    private static string GraphToJson<T>(T data)
+    {
+        var content = JsonUtility.ToJson(data);
+        if (string.IsNullOrEmpty(content))
+        {
+            Debug.Log("Content == null:"+data.ToString());
+            return null;
+        }
+
+        return content;
+    }
 }

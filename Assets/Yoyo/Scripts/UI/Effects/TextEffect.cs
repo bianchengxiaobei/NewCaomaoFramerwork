@@ -119,6 +119,7 @@ namespace Yoyo.UI
 
 			var text = richText.text;
 			var lines = gen.lines;
+            Debug.Log("Line:"+lines.Count);
 			var chars = gen.characters;
 			var endCharIdx = chars.Count - 2;
 			for (int i = lines.Count - 1; i >= 0 && endCharIdx >= m_BeginIndex; i--) {

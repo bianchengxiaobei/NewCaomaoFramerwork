@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using System;
-[CreateAssetMenu(fileName = "LocalizationData", menuName = "CaomaoFramewrok/LocalizationData")]
+[CreateAssetMenu(fileName = "LocalizationData", menuName = "CaomaoFramework/LocalizationData")]
 [Serializable]
 public class LocalizationData : SerializedScriptableObject
 {

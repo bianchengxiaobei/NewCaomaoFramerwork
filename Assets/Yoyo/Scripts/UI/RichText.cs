@@ -108,6 +108,7 @@ namespace Yoyo.UI
 		protected override void OnPopulateMesh(VertexHelper toFill)
 		{
 			base.OnPopulateMesh(toFill);
+            Debug.Log("顶点:"+toFill.currentVertCount);
 			if (font != null) {
 				m_UsedEffects.Sort();
 				foreach (var effect in m_UsedEffects) {
