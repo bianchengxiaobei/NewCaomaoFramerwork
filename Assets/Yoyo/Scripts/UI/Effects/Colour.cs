@@ -14,7 +14,14 @@ namespace Yoyo.UI
 			m_Colors = ParseColors(parameter, 2);
 		}
 
-		protected override void ProcessCharactersAtLine(VertexHelper vh, int lineIndex, int startCharIdx, int endCharIdx, IList<UILineInfo> lines, IList<UICharInfo> chars)
+
+        public override void SetParameter(string value)
+        {
+            
+        }
+
+
+        protected override void ProcessCharactersAtLine(VertexHelper vh, int lineIndex, int startCharIdx, int endCharIdx, IList<UILineInfo> lines, IList<UICharInfo> chars)
 		{
 			if (m_Colors.Length == 0)
 				return;

@@ -98,7 +98,17 @@ namespace Yoyo.UI
 			m_ParameterDirty = true;
 		}
 
-		protected virtual void OnParameterRebuild()
+        /// <summary>
+        /// 设置参数
+        /// </summary>
+        /// <param name="value"></param>
+        public virtual void SetParameter(string value)
+        {
+            this.parameter = value;
+        }
+
+
+        protected virtual void OnParameterRebuild()
 		{
 		}
 

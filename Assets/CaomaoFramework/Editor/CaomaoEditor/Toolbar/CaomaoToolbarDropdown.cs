@@ -2,6 +2,35 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+
+
+/// <summary>
+/// 窗体上面的工具条
+/// </summary>
+///用法:
+/// var toolbar = new CaomaoToolbarDropdown();
+/// var menuItem = new CaomaoToolbarMenuItem("MenuName");
+/// menuItem.AddMenuItem(MenumItemName,Callback);//1：菜单单元名字,2:Callback(点击菜单单元执行的方法)
+/// toolbar.AddToolbarMenuItems("GroupName",10,menuItem);//1:GroupName,:Space,3:MenuItem(菜单)
+/// 
+///
+///
+///总体画是放在OnGUI中:
+/// CaomaoToolbarDropdown.BeginDrawGroup();
+/// toobar.DrawSingleGroup("GroupName");//画单个Group的菜单
+/// GUILayout.FlexibleSpace();      //中间分割（左右两边对齐）      
+/// toobar.DrawSingleGroup("GroupName");//画单个Group的菜单
+///
+///
+///
+///
+///
+///
+///
+///
+///
+///
+/// 
 public class CaomaoToolbarDropdown
 {
     public Dictionary<string, List<CaomaoToolbarMenuItem>> items = new Dictionary<string, List<CaomaoToolbarMenuItem>>();
@@ -41,18 +70,28 @@ public class CaomaoToolbarDropdown
         GUILayout.EndHorizontal();
     }
 
-    public void BeginDrawGroup()
+    //public void BeginDrawGroup()
+    //{
+    //    GUILayout.BeginHorizontal(EditorStyles.toolbar);
+    //}
+
+    public static void BeginDrawGroup()
     {
         GUILayout.BeginHorizontal(EditorStyles.toolbar);
     }
-    public void EndDrawGruop()
+
+    public static void EndDrawGroup()
     {
         GUILayout.EndHorizontal();
     }
+
+    //public void EndDrawGruop()
+    //{
+    //    GUILayout.EndHorizontal();
+    //}
     public void DrawSingleGroup(string group)
     {
-        List<CaomaoToolbarMenuItem> list = null;
-        if (this.items.TryGetValue(group,out list))
+        if (this.items.TryGetValue(group,out var list))
         {
             if (list.Count > 0)
             {

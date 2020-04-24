@@ -24,7 +24,13 @@ namespace Yoyo.UI
 			}
 		}
 
-		protected override void ProcessCharactersAtLine(VertexHelper vh, int lineIndex, int startCharIdx, int endCharIdx, IList<UILineInfo> lines, IList<UICharInfo> chars)
+        public override void SetParameter(string value)
+        {
+            
+        }
+
+
+        protected override void ProcessCharactersAtLine(VertexHelper vh, int lineIndex, int startCharIdx, int endCharIdx, IList<UILineInfo> lines, IList<UICharInfo> chars)
 		{
 			var line = lines[lineIndex];
 			var yMin = (line.topY - line.height) / richText.pixelsPerUnit + 1;

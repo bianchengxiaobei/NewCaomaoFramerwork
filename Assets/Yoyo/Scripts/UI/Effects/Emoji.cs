@@ -70,7 +70,12 @@ namespace Yoyo.UI
 			m_SpriteCurrentIndex = m_SpriteBeginIndex;
 		}
 
-		private void CreateEmoticon()
+        public override void SetParameter(string value)
+        {
+            //默认不做任何事情
+        }
+
+        private void CreateEmoticon()
 		{
 			var go = new GameObject("emoticon");
 			go.layer = gameObject.layer;

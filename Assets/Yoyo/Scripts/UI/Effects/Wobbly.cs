@@ -28,6 +28,12 @@ namespace Yoyo.UI
             m_Magnitude = ParseFloat(a.Length > 2 ? a[2] : string.Empty, 2);
         }
 
+        public override void SetParameter(string value)
+        {
+            
+        }
+
+
         protected override void ProcessCharactersAtLine(VertexHelper vh, int lineIndex, int startCharIdx, int endCharIdx, IList<UILineInfo> lines, IList<UICharInfo> chars)
         {
 
