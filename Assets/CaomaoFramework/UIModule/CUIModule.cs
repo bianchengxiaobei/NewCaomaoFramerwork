@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using System;
+
 namespace CaomaoFramework
 {
     [Module(true)]
@@ -36,6 +38,34 @@ namespace CaomaoFramework
             m_dicUIs.TryGetValue(type, out ui);
             return ui;
         }
+
+        public void ShowUI<T>(string defaultName = null) where T : UIBase
+        {
+            if (defaultName == null)
+            {
+                var type = typeof(T);
+                defaultName = type.FullName;              
+            }
+            //Debug.Log(defaultName);
+            if (m_dicUIs.TryGetValue(defaultName, out var ui))
+            {
+                ui.Show();
+            }
+        }
+
+        public void PreLoadUI<T>(Action<T> onFinished = null, string defaultName = null) where T : UIBase
+        {
+            if (defaultName == null)
+            {
+                var type = typeof(T);
+                defaultName = type.FullName;
+            }
+            if (m_dicUIs.TryGetValue(defaultName, out var ui))
+            {
+                ui.PreLoad<T>(onFinished);
+            }
+        }
+
 
         public void Update()
         {

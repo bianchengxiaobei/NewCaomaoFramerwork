@@ -1,0 +1,13 @@
+﻿using System;
+using System.Collections.Generic;
+///此脚本自动生成
+[Serializable]
+public class >:className:<
+{
+	>:FOREVERY variables:<
+	public >:[0]:< >:[1]:<;
+	>:ENDFOREVERY:<
+	>:FOREVERY arrayVar:<
+	public >:[0]:< >:[1]:< = new >:[0]:<();
+	>:ENDFOREVERY:<
+}

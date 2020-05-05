@@ -4,80 +4,88 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
-/// <summary>
-/// 人物提示界面（点击关闭进入下一个新手引导）
-/// </summary>
-public class NewbieHelpTipStep : NewbieHelpStep
+namespace CaomaoFramework
 {
-    public List<NewbieHelpDialogTip> Tips { get; set; }//所有对话
-    private int m_iCurIndex = 0;//当前对话所在的索引
-    private static CUIHelpTip UITipObj;
-    private NewbieHelpTipStepData StepData;
-    public static void Init()
+    /// <summary>
+    /// 人物提示界面（点击关闭进入下一个新手引导）
+    /// </summary>
+    [CInstanceNumber(3)]
+    public class NewbieHelpTipStep : NewbieHelpStep
     {
-        CaomaoDriver.ResourceModule.LoadGameObjectAsync("NewbieHelpTip", (obj) =>
+        public List<NewbieHelpDialogTip> Tips { get; set; }//所有对话
+        private int m_iCurIndex = 0;//当前对话所在的索引
+        private static CUIHelpTip UITipObj;
+        private NewbieHelpTipStepData StepData;
+        private static bool m_bStaticInit = false;
+        public static void Init()
         {
-            UITipObj = obj.GetComponent<CUIHelpTip>();
-            if (UITipObj == null)
+            if (m_bStaticInit) 
             {
-                Debug.LogError("UITip == null");
                 return;
             }
-            //设置父亲节点，让他可以点击
-            CaomaoDriver.NewbieHelpModule.SetUIToRoot(UITipObj.transform);
-            UITipObj.SetVisiable(false);
-        });
-    }
-    public override void Enter()
-    {
-        base.Enter();
-        //实例化对话。然后设置mask为最上层
-        if (UITipObj != null)
-        {
-            UITipObj.AddButtonListener(this.NextDialogTip);
-            //设置新手提示图片的更改
-            UITipObj.SetNewbieHelpStepData(this.StepData,this.m_iCurIndex);
-            //显示并且能点击
-            UITipObj.SetVisiable(true);
+            CaomaoDriver.ResourceModule.LoadGameObjectAsync("NewbieHelpTip", (obj) =>
+            {
+                UITipObj = obj.GetComponent<CUIHelpTip>();
+                if (UITipObj == null)
+                {
+                    Debug.LogError("UITip == null");
+                    return;
+                }
+                //设置父亲节点，让他可以点击
+                CaomaoDriver.NewbieHelpModule.SetUIToRoot(UITipObj.transform);
+                UITipObj.SetVisiable(false);
+                m_bStaticInit = true;
+            });
         }
-        else 
+        public override void Enter()
         {
-            Debug.LogError("UITip没有初始化成功!");
-            Init();
+            base.Enter();
+            //实例化对话。然后设置mask为最上层
+            if (UITipObj != null)
+            {
+                UITipObj.AddButtonListener(this.NextDialogTip);
+                //设置新手提示图片的更改
+                UITipObj.SetNewbieHelpStepData(this.StepData, this.m_iCurIndex);
+                //显示并且能点击
+                UITipObj.SetVisiable(true);
+            }
+            else
+            {
+                Debug.LogError("UITip没有初始化成功!");
+                Init();
+            }
         }
-    }
+        public override void LoadHelpStepData()
+        {
+            var filePath = $"{this.MainID}_{this.ID}.txt";//远程端持久化目录下载 + this.id（归到下载更新里面）
+            this.StepData = CaomaoDriver.DataModule.GetJsonData<NewbieHelpTipStepData>(filePath);
+            if (this.StepData != default(NewbieHelpTipStepData))
+            {
+                //说明读取成功
 
-    public override void LoadHelpStepData()
-    {
-        var filePath = $"{this.MainID}_{this.ID}.txt";//远程端持久化目录下载 + this.id（归到下载更新里面）
-        this.StepData = CaomaoDriver.DataModule.GetJsonData<NewbieHelpTipStepData>(filePath);
-        if (this.StepData != default(NewbieHelpTipStepData))
-        {
-            //说明读取成功
-
+            }
         }
-    }
 
-    /// <summary>
-    /// 下一个对话，如果没有就直接结束
-    /// </summary>
-    public void NextDialogTip()
-    {
-        this.m_iCurIndex++;
-        if (this.m_iCurIndex >= this.Tips.Count)
+        /// <summary>
+        /// 下一个对话，如果没有就直接结束
+        /// </summary>
+        public void NextDialogTip()
         {
-            //说明结束了
-            this.OnFinished();
-            this.Clear();
+            this.m_iCurIndex++;
+            if (this.m_iCurIndex >= this.Tips.Count)
+            {
+                //说明结束了
+                this.OnFinished();
+            }
         }
-    }
-    /// <summary>
-    /// 清除对话资源
-    /// </summary>
-    public override void Clear()
-    {
-        base.Clear();
-        this.m_iCurIndex = 0;
-        this.Tips.Clear();
+        /// <summary>
+        /// 清除对话资源
+        /// </summary>
+        public override void OnFinished()
+        {
+            this.m_iCurIndex = 0;
+            this.Tips.Clear();
+            base.OnFinished();
+        }     
     }
 }

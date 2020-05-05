@@ -82,7 +82,7 @@ public class UIBaseApadater : CrossBindingAdaptor
             }            
         }
 
-        protected override void PreLoadUI()
+        protected override void PreLoadUI(Action onFinished = null)
         {
             if (this.m_preloadUI == null)
             {
@@ -96,7 +96,7 @@ public class UIBaseApadater : CrossBindingAdaptor
             }
             else
             {
-                base.PreLoadUI();
+                base.PreLoadUI(onFinished);
             }
         }
 

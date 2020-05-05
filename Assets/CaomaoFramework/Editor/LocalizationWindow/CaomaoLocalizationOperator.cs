@@ -108,7 +108,7 @@ namespace CaomaoFramework.LocalizationEditor
             }
             CaomaoScriptGenerateModule.Instance.Restart(templateText.text);
             int col = 0;int row = 0;
-            var excel = CaomaoEditorHelper.ReadExcel(this.ExcelFilePath, ref col, ref row);
+            var excel = CaomaoEditorHelper.ReadExcelRow(this.ExcelFilePath, ref col, ref row);
             if (excel == null)
             {
                 Debug.LogError("No Excel:" + this.ExcelFilePath);
@@ -153,7 +153,7 @@ namespace CaomaoFramework.LocalizationEditor
         {
             int col = 0;
             int row = 0;
-            var excel = CaomaoEditorHelper.ReadExcel(this.ExcelFilePath,ref col,ref row);
+            var excel = CaomaoEditorHelper.ReadExcelRow(this.ExcelFilePath,ref col,ref row);
             if (excel == null)
             {
                 Debug.LogError("No Excel:" + this.ExcelFilePath);

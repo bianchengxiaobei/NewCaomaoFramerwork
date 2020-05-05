@@ -44,7 +44,7 @@ namespace CaomaoFramework
         public override void RecyleSelf(TimerBase data)
         {
             var d = data as TimerData;
-            ClassPoolModule<TimerData>.Release(ref d);
+            ClassPoolModule<TimerData>.Release(d);
         }
 
         public override void SetCallback(Delegate callback)
@@ -86,7 +86,7 @@ namespace CaomaoFramework
         public override void RecyleSelf(TimerBase data)
         {
             var d = data as TimerData<T>;
-            ClassPoolModule<TimerData<T>>.Release(ref d);
+            ClassPoolModule<TimerData<T>>.Release(d);
         }
         public override void OnRelease()
         {
@@ -128,7 +128,7 @@ namespace CaomaoFramework
         public override void RecyleSelf(TimerBase data)
         {
             var d = data as TimerData<T,V>;
-            ClassPoolModule<TimerData<T,V>>.Release(ref d);
+            ClassPoolModule<TimerData<T,V>>.Release(d);
         }
         public override void OnRelease()
         {

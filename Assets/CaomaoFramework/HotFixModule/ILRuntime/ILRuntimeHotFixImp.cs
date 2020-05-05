@@ -47,7 +47,11 @@ namespace CaomaoFramework
             this.m_hotFixUpdateMethod = this.m_hotFixEnter.GetMethod("Update", 0);
             //更新完成后进入热更dll的代码执行
             CaomaoDriver.UIModule.AddUI(nameof(UIRedPoint), new UIRedPoint());
-            CaomaoDriver.UIModule.GetUI(nameof(UIRedPoint)).Show();
+            CaomaoDriver.UIModule.AddUI(nameof(UINewbieHelp), new UINewbieHelp());
+            CaomaoDriver.UIModule.ShowUI<UIRedPoint>();
+            CaomaoDriver.NewbieHelpModule.StartNewbieHelp(1);
+            //CaomaoDriver.UIModule.PreLoadUI<UINewbieHelp>(onFinished:this.Test);
+            //CaomaoDriver.UIModule.GetUI(nameof(UIRedPoint)).Show();
 
 
 
@@ -79,7 +83,7 @@ namespace CaomaoFramework
         }
         private void Test()
         {
-            //CaomaoDriver.AudioModule.FadeInBGMusic("Login_Music",2);
+            Debug.Log("Test");
         }
         private void InitILRuntime()
         {

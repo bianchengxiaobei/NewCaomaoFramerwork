@@ -24,18 +24,7 @@ namespace CaomaoFramework.LocalizationEditor
         protected override OdinMenuTree BuildMenuTree()
         {
             var tree = new OdinMenuTree(true);
-            var customMenuStyle = new OdinMenuStyle
-            {
-                BorderPadding = 0f,
-                AlignTriangleLeft = true,
-                TriangleSize = 16f,
-                TrianglePadding = 0f,
-                Offset = 20f,
-                Height = 23,
-                IconPadding = 0f,
-                BorderAlpha = 0.323f
-            };
-            tree.DefaultMenuStyle = customMenuStyle;
+            tree.DefaultMenuStyle = CaomaoGUIStyle.DefaultMenuStyle;
             tree.Config.DrawSearchToolbar = true;
             tree.AddObjectAtPath("本地化操作", this.operatorIns);
             tree.AddAllAssetsAtPath("本地化ScriptableObject文件",

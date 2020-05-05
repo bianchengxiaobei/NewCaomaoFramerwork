@@ -13,6 +13,8 @@ namespace CaomaoFramework
         public string HotFixDllName;
         [LabelText("热更新pdb")]
         public string HotFixPdbName;
+        [LabelText("新手教程本地PlayerPref的名称")]
+        public string LocalPPNewbieHelpName;
         [LabelText("配置文件所在的文件目录")]
         public string ConfigPathDir;
     }

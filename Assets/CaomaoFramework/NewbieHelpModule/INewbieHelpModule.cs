@@ -4,6 +4,7 @@ namespace CaomaoFramework
 {
     public interface INewbieHelpModule
     {
+        void StartNewbieHelp(int newbieMainId);
         void SetVaildArea(RectTransform area);
         void SetUIToRoot(Transform uiTransform);
     }

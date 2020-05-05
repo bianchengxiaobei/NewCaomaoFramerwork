@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98d6864b839ca5149b1f0c9a75cfccb3, type: 3}
   m_Name: CaomaoLocalizationGobalConfig
   m_EditorClassIdentifier: 
-  LocalizationExcelFolderPath: Assets/Editor/LocalizationWindow/LocalizationExcel
+  LocalizationExcelFolderPath: Assets/CaomaoFramework/Editor/LocalizationWindow/LocalizationExcel
   LocalizationScriptableObjectPath: Assets/CaomaoFramework/LocalizationModule/LocalizationData
-  LocalizationTemplatePath: Assets/Editor/LocalizationWindow/LocalizationConstTemplate.txt
+  LocalizationTemplatePath: Assets/CaomaoFramework/Editor/LocalizationWindow/LocalizationConstTemplate.txt
   SBConfig:
   - Language: "\u4E2D\u56FD"
     ScriptableObjectName: "Localization_\u4E2D\u56FD"

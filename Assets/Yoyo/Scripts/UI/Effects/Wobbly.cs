@@ -38,6 +38,7 @@ namespace Yoyo.UI
         {
 
             UIVertex vertex = UIVertex.simpleVert;
+            //2019起作用，2018不行
             var tempStartIndex = startCharIdx;
             while (startCharIdx <= endCharIdx)
             {
@@ -47,14 +48,15 @@ namespace Yoyo.UI
                     for (int i = 0; i < 4; i++)
                     {
                         var k = tempStartIndex * 4 + i;
-                        try
-                        {
-                            vh.PopulateUIVertex(ref vertex, k);
-                        }
-                        catch (Exception e)
-                        {
-                            Debug.LogException(e);
-                        }
+                        vh.PopulateUIVertex(ref vertex, k);
+                        //try
+                        //{
+                        //    vh.PopulateUIVertex(ref vertex, k);
+                        //}
+                        //catch (Exception e)
+                        //{
+                        //    Debug.LogException(e);
+                        //}
                         vertex.position = vertex.position + new Vector3(0, m_Magnitude * Mathf.Sin((Time.timeSinceLevelLoad * m_Speed) + (tempStartIndex * m_Density)), 0);
                         vh.SetUIVertex(vertex, k);
                     }

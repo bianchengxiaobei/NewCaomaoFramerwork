@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -194,7 +195,7 @@ namespace CaomaoFramework
             {              
                 this.m_oLoadGameObjectOperation = Addressables.InstantiateAsync(objPath,Vector3.zero,Quaternion.identity);
                 var obj = await this.m_oLoadGameObjectOperation.Task;
-                Debug.Log(objPath);
+                //Debug.Log(objPath);
                 if (bCheck)
                 {
                     this.CheckFinishedLoad();
@@ -243,6 +244,19 @@ namespace CaomaoFramework
                 this.StartLoad();
             }
         }
+
+        public async Task<T> LoadAssetAsyncNoCallback<T>(string assetName) where T : Object 
+        {
+            var obj = await Addressables.LoadAssetAsync<Object>(assetName).Task;
+            return obj as T;
+        }
+
+        public async Task<GameObject> LoadGameObjectAsyncNoCallback(string assetName)
+        {
+            var obj = await Addressables.InstantiateAsync(assetName).Task;
+            return obj;
+        }
+
 
         //public void LoadAsset<T>(string assetName, AssetLoadFinishedEventHandler<T> callback)where T:Object
         //{
@@ -303,6 +317,8 @@ namespace CaomaoFramework
         public void UnloadResource(Object asset)
         {
             Addressables.Release(asset);
-        }     
+        }
+
+      
     }
 }

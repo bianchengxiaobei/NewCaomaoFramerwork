@@ -38,7 +38,21 @@ public class CaomaoEditorHelper
             return EDevPlatformType.Linux;
         }
     }
-    public static DataRowCollection ReadExcel(string filePath,ref int col,ref int row)
+
+    public static DataSet ReadExcel(string filePath)
+    {
+        if (File.Exists(filePath))
+        {
+            FileStream stream = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+            IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(stream);
+            DataSet result = excelReader.AsDataSet();
+            return result;
+        }
+        Debug.LogError("不存在Excel文件:" + filePath);
+        return null;
+    }
+
+    public static DataRowCollection ReadExcelRow(string filePath,ref int col,ref int row)
     {
         if (File.Exists(filePath))
         {
@@ -53,7 +67,7 @@ public class CaomaoEditorHelper
         Debug.LogError("不存在Excel文件:" + filePath);
         return null;
     }
-    public static DataRowCollection ReadExcel(string filePath)
+    public static DataRowCollection ReadExcelRow(string filePath)
     {
         FileStream stream = null;
         try

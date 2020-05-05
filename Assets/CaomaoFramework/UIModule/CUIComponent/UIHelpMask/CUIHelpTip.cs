@@ -56,7 +56,7 @@ namespace  CaomaoFramework
                 this.lb_characterName.text = tipData.CharacterName;
                 CaomaoDriver.ResourceModule.LoadAssetAsync(tipData.CharacterPath, (asset) =>
                 {
-                    this.sp_character.sprite = asset  as Sprite;//替换人物的图片
+                    this.sp_character.sprite = asset as Sprite;//替换人物的图片
                 });
             }
         }

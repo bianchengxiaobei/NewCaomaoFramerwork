@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.ResourceManagement.ResourceProviders;
 using Object = UnityEngine.Object;
+using System.Threading.Tasks;
+
 namespace CaomaoFramework
 {
     /// <summary>
@@ -27,8 +29,10 @@ namespace CaomaoFramework
         void LoadSceneAsync(string sceneName, AssetLoadFinishedEventHandler<SceneInstance> callback,LoadSceneMode mode,bool bStart = false);
         [Obsolete("暂时不支持同步加载")]
         GameObject LoadGameObject(string objPath);
-        //void LoadAudioClip(string audioClip, AssetLoadFinishedEventHandler<AudioClip> callback);
-        //void LoadSprite(string atlas, string spriteName, AssetLoadFinishedEventHandler<Sprite> callback);
+        Task<T> LoadAssetAsyncNoCallback<T>(string assetName) where T : Object;
+
+        Task<GameObject> LoadGameObjectAsyncNoCallback(string assetName);
+
         void AddGameObjectTask(string objPath, AssetLoadFinishedEventHandler<GameObject> callback);
         void AddAssetTask(string objPath, AssetLoadFinishedEventHandler<Object> callback);
         void AddSceneTask(string objPath, LoadSceneMode mode, AssetLoadFinishedEventHandler<SceneInstance> callback);

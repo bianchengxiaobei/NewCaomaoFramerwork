@@ -84,7 +84,7 @@ namespace CaomaoFramework
         /// 线程安全回收实例
         /// </summary>
         /// <param name="obj"></param>
-        public static void SafeRelease(ref T obj)
+        public static void SafeRelease(T obj)
         {
             if (null != obj)
             {
@@ -124,7 +124,7 @@ namespace CaomaoFramework
                 }
             }
         }
-        public static void Release(ref T obj)
+        public static void Release(T obj)
         {
             if (null != obj)
             {

@@ -2,6 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+/// <summary>
+/// PlayerPref扩展类
+/// </summary>
 public static class PlayerPrefModule
 {
     public static List<int> GetIntList(string key)
@@ -65,26 +68,26 @@ public static class PlayerPrefModule
         }
         return content;
     }
-    public static string GetString(string key)
+    public static string GetString(string key,string defaultValue = "")
     {
-        return PlayerPrefs.GetString(key);
+        return PlayerPrefs.GetString(key,defaultValue);
     }
-    public static float GetFloat(string key)
+    public static float GetFloat(string key,float defaultValue = 0f)
     {
-        return PlayerPrefs.GetFloat(key);
+        return PlayerPrefs.GetFloat(key,defaultValue);
     }
-    public static int GetInt(string key)
+    public static int GetInt(string key, int defalutValue = 0)
     {
-        return PlayerPrefs.GetInt(key);
+        return PlayerPrefs.GetInt(key,defalutValue);
     }
-    public static bool GetBool(string key)
+    public static bool GetBool(string key,bool defalutValue = false)
     {
-        return PlayerPrefs.GetInt(key) == 0 ? false : true;
+        return PlayerPrefs.GetInt(key,0) == 0 ? false : true;
     }
 
 
 
-    ////////////////////////////////////////////////
+    ////////////////////////////////////////////////SetValue
 
     public static void SetListValue<T>(string key, List<T> value) 
     {

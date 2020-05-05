@@ -1,12 +1,15 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using Sirenix.Utilities.Editor;
+using Sirenix.OdinInspector.Editor;
+
 public static class CaomaoGUIStyle
 {
     private static GUIStyle m_headerStyle;
     private static GUIStyle m_graphBgStyle;
     private static GUIStyleSB GUIStyleSB;
     private static GUIStyle m_nodeHeadStyle;
+    private static OdinMenuStyle m_defaultMenuStyle;
     /// <summary>
     /// 头部Style
     /// </summary>
@@ -56,6 +59,30 @@ public static class CaomaoGUIStyle
                 m_nodeHeadStyle = GUIStyleSB.NodeHeadStyle;
             }
             return m_nodeHeadStyle;
+        }
+    }
+    /// <summary>
+    /// 左侧菜单的默认style
+    /// </summary>
+    public static OdinMenuStyle DefaultMenuStyle 
+    {
+        get 
+        {
+            if (m_defaultMenuStyle == null) 
+            {
+                m_defaultMenuStyle = new OdinMenuStyle
+                {
+                    BorderPadding = 0f,
+                    AlignTriangleLeft = true,
+                    TriangleSize = 16f,
+                    TrianglePadding = 0f,
+                    Offset = 20f,
+                    Height = 23,
+                    IconPadding = 0f,
+                    BorderAlpha = 0.323f
+                };
+            }
+            return m_defaultMenuStyle;
         }
     }
 }

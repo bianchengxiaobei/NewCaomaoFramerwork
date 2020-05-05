@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 namespace CaomaoFramework
 {
     public enum EUIHideType
@@ -121,7 +122,19 @@ namespace CaomaoFramework
         {
             if (m_oRoot == null)
             {
-                PreLoadUI();
+                PreLoadUI(null);
+            }
+        }
+
+        public void PreLoad<T>(Action<T> onFinished = null) where T : UIBase
+        {
+            if (m_oRoot == null)
+            {
+                PreLoadUI(()=>
+                {
+                    T t = this as T;
+                    onFinished?.Invoke(t);
+                });
             }
         }
 
@@ -175,7 +188,7 @@ namespace CaomaoFramework
                 }
             });
         }
-        protected virtual void PreLoadUI() 
+        protected virtual void PreLoadUI(Action onFinished = null) 
         {
             if (m_oRoot)
             {
@@ -199,6 +212,7 @@ namespace CaomaoFramework
                     this.m_oRoot.localScale = Vector3.one;
                     this.m_oRoot.gameObject.SetActive(false);//设置为隐藏
                     InitGraphicComponet();
+                    onFinished?.Invoke();
                 }
                 else
                 {

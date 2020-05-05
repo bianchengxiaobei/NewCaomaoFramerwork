@@ -11,17 +11,20 @@ namespace CaomaoFramework
     [CreateAssetMenu(fileName = "NewbieHelpAllIdData", menuName = "CaomaoFramework/NewbieHelpAllIdData")]
     public class NewbieHelpAllIdData : ScriptableObject
     {
-        [LabelText("所有新手引导id")]
-        public List<NewbieHelpAllData> AllStepIds = new List<NewbieHelpAllData>();//所有新手引导的id链表
+        [LabelText("主引导Id")]
+        public int MainId;
+        [LabelText("该MainId下所有新手引导")]
+        public List<NewbieHelpData> AllStepIds = new List<NewbieHelpData>();//所有新手引导的id链表
     }
 
     public enum ENewbieHelpType
     {
         CharacterTip,//任务提示
-        ButtonClick,//按钮点击
+        ButtonClickWithContent,//按钮点击带提示
+        ButtonClickNoContent,//按钮点击不带提示
     }
     [Serializable]
-    public class NewbieHelpAllData
+    public class NewbieHelpData
     {
         [LabelText("当前新手引导id")]
         public int Id;

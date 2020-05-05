@@ -25,6 +25,9 @@ public class CaomaoScriptGenerateModule : Singleton<CaomaoScriptGenerateModule>
     public void Restart(string tempText)
     {
         this.targetTemplate = tempText;
+        this.state = State.None;
+        this.currentIterateeIndex = 0;
+        this.loopStart = -1;
         this.replaces.Clear();
     }
 
@@ -165,6 +168,9 @@ public class CaomaoScriptGenerateModule : Singleton<CaomaoScriptGenerateModule>
                 throw new Exception("No variable with the name " + iterateeName + " could be located");
 
             iteratee = (object[])replaces[iterateeName];
+
+            //if (iteratee == null || iteratee.Length == 0 || ((object[])iteratee[0]).Length == 0)
+            //    emptyArray = true;
 
             if (iteratee.Length == 0 || ((object[])iteratee[0]).Length == 0)
                 emptyArray = true;
