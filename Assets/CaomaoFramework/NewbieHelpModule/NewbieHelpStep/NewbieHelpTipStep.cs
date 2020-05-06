@@ -12,11 +12,12 @@ namespace CaomaoFramework
     [CInstanceNumber(3)]
     public class NewbieHelpTipStep : NewbieHelpStep
     {
-        public List<NewbieHelpDialogTip> Tips { get; set; }//所有对话
+        //public List<NewbieHelpDialogTip> Tips { get; set; }//所有对话
         private int m_iCurIndex = 0;//当前对话所在的索引
         private static CUIHelpTip UITipObj;
         private NewbieHelpTipStepData StepData;
         private static bool m_bStaticInit = false;
+        private static Action m_actionInitFinished;
         public static void Init()
         {
             if (m_bStaticInit) 
@@ -31,11 +32,13 @@ namespace CaomaoFramework
                     Debug.LogError("UITip == null");
                     return;
                 }
+                var rectTransform = UITipObj.GetComponent<RectTransform>();
                 //设置父亲节点，让他可以点击
-                CaomaoDriver.NewbieHelpModule.SetUIToRoot(UITipObj.transform);
+                CaomaoDriver.NewbieHelpModule.SetUIToRoot(rectTransform);
                 UITipObj.SetVisiable(false);
-                m_bStaticInit = true;
-            });
+                m_actionInitFinished?.Invoke();
+                m_bStaticInit = true;               
+            },true);
         }
         public override void Enter()
         {
@@ -43,6 +46,7 @@ namespace CaomaoFramework
             //实例化对话。然后设置mask为最上层
             if (UITipObj != null)
             {
+                Debug.Log("Enter");
                 UITipObj.AddButtonListener(this.NextDialogTip);
                 //设置新手提示图片的更改
                 UITipObj.SetNewbieHelpStepData(this.StepData, this.m_iCurIndex);
@@ -52,18 +56,22 @@ namespace CaomaoFramework
             else
             {
                 Debug.LogError("UITip没有初始化成功!");
-                Init();
+                //Init();
+                m_actionInitFinished = this.Enter;
             }
         }
         public override void LoadHelpStepData()
         {
-            var filePath = $"{this.MainID}_{this.ID}.txt";//远程端持久化目录下载 + this.id（归到下载更新里面）
-            this.StepData = CaomaoDriver.DataModule.GetJsonData<NewbieHelpTipStepData>(filePath);
-            if (this.StepData != default(NewbieHelpTipStepData))
+            if (this.StepData == null)
             {
-                //说明读取成功
-
-            }
+                var filePath = $"{Application.persistentDataPath}/Newbie/NewbieHelp_{this.MainID}_{this.ID}.json";//远程端持久化目录下载 + this.id（归到下载更新里面）
+                this.StepData = CaomaoDriver.DataModule.GetJsonData<NewbieHelpTipStepData>(filePath);
+                if (this.StepData != default(NewbieHelpTipStepData))
+                {
+                    //说明读取成功
+                    Debug.Log("加载成功");
+                }
+            }          
         }
 
         /// <summary>
@@ -72,11 +80,14 @@ namespace CaomaoFramework
         public void NextDialogTip()
         {
             this.m_iCurIndex++;
-            if (this.m_iCurIndex >= this.Tips.Count)
+            if (this.m_iCurIndex >= this.StepData.Dialogs.Count)
             {
                 //说明结束了
                 this.OnFinished();
+                return;
             }
+            //设置新手提示图片的更改
+            UITipObj.SetNewbieHelpStepData(this.StepData, this.m_iCurIndex);
         }
         /// <summary>
         /// 清除对话资源
@@ -84,7 +95,7 @@ namespace CaomaoFramework
         public override void OnFinished()
         {
             this.m_iCurIndex = 0;
-            this.Tips.Clear();
+            //this.Tips.Clear();
             base.OnFinished();
         }     
     }

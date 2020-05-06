@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Sprite
+  m_EditorClassIdentifier: 
+  m_GroupName: Sprite
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 98220ad786139db40a53af6304301d66
+  m_SerializeEntries:
+  - m_GUID: 030f22cd9e9360449b678b4c914f9f0c
+    m_Address: caocao
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_mainAssetType: UnityEngine.Texture2D, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+    m_MainAsset: {fileID: 2800000, guid: 030f22cd9e9360449b678b4c914f9f0c, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: 030f22cd9e9360449b678b4c914f9f0c, type: 3}
+  - m_GUID: 0f46d2de7237a8647adc4798e26fbf50
+    m_Address: zhugeliang
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_mainAssetType: UnityEngine.Texture2D, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+    m_MainAsset: {fileID: 2800000, guid: 0f46d2de7237a8647adc4798e26fbf50, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: 0f46d2de7237a8647adc4798e26fbf50, type: 3}
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 54be41db46d1fa54e855f2d070e86fc9, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 00b6cd05a85808244b2a5401348b72bf, type: 2}
+    - {fileID: 11400000, guid: 215d256233b8ffc4596fa51d42a0777e, type: 2}

@@ -41,7 +41,7 @@ namespace  CaomaoFramework
             }
         }
 
-        public void SetNewbieHelpStepData(NewbieHelpTipStepData data,int index)
+        public async void SetNewbieHelpStepData(NewbieHelpTipStepData data,int index)
         {
             if (index >= data.Dialogs.Count)
             {
@@ -54,10 +54,15 @@ namespace  CaomaoFramework
             {
                 this.lb_tip.text = tipData.DialogContent;
                 this.lb_characterName.text = tipData.CharacterName;
-                CaomaoDriver.ResourceModule.LoadAssetAsync(tipData.CharacterPath, (asset) =>
-                {
-                    this.sp_character.sprite = asset as Sprite;//替换人物的图片
-                });
+                Debug.Log(tipData.CharacterPath);
+                var obj = await CaomaoDriver.ResourceModule.LoadAssetAsyncNoCallback<Object>(tipData.CharacterPath);
+                Debug.Log(obj);
+                this.sp_character.sprite = obj as Sprite;
+                //CaomaoDriver.ResourceModule.LoadAssetAsync(tipData.CharacterPath, (asset) =>
+                //{
+                //    Debug.Log(tipData.CharacterPath);
+                //    this.sp_character.sprite = asset as Sprite;//替换人物的图片
+                //});
             }
         }
 

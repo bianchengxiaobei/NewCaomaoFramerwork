@@ -39,9 +39,17 @@ MonoBehaviour:
     m_SerializedLabels: []
     m_mainAssetType: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
-    m_MainAsset: {fileID: 3978721079132838790, guid: aab83d5b0b6119a4ca350e139666c6db,
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: fd9074acc2ae54e47bf1f744a6791393
+    m_Address: NewbieHelpTip
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_mainAssetType: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+    m_MainAsset: {fileID: 859073471305299828, guid: fd9074acc2ae54e47bf1f744a6791393,
       type: 3}
-    m_TargetAsset: {fileID: 3978721079132838790, guid: aab83d5b0b6119a4ca350e139666c6db,
+    m_TargetAsset: {fileID: 859073471305299828, guid: fd9074acc2ae54e47bf1f744a6791393,
       type: 3}
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 54be41db46d1fa54e855f2d070e86fc9, type: 2}

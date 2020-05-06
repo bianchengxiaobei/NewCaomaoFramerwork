@@ -1,4 +1,5 @@
 ﻿using Boo.Lang;
+using Sirenix.Serialization;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -64,11 +65,11 @@ namespace CaomaoFramework
             {
                 if (ui != null) 
                 {
-                    this.HelpUIRoot = ui.PanelRoot;
+                    this.HelpUIRoot = ui.PanelRoot.Find("NewbieHelpRoot");
                     this.HelpMask = ui.CUIHelpMask;
-                    Debug.Log(this.HelpMask.name);
+                    ui.PanelRoot.gameObject.SetActive(true);
+                    this.m_bInit = true;
                 }
-                this.HelpUIRoot.gameObject.SetActive(true);
                 this.InitNewbieHelpData(newbieMainId, () =>
                 {
                     if (this.m_allMainData.AllStepIds.Count > 0)
@@ -161,7 +162,7 @@ namespace CaomaoFramework
         /// 设置生成的UI到新手引导根节点
         /// </summary>
         /// <param name="uiTransform"></param>
-        public void SetUIToRoot(Transform uiTransform)
+        public void SetUIToRoot(RectTransform uiTransform)
         {
             if (this.m_bInit == false)
             {
@@ -171,7 +172,12 @@ namespace CaomaoFramework
             if (uiTransform != null)
             {
                 uiTransform.SetParent(this.HelpUIRoot);
+                //uiTransform.sizeDelta = Vector2.zero;
+                //uiTransform.anchoredPosition = Vector2.zero;
+                //uiTransform.offsetMax = Vector2.zero;
+                //uiTransform.offsetMin = Vector2.zero;
                 uiTransform.localPosition = Vector3.zero;
+                //uiTransform.localRotation = Quaternion.identity;
                 uiTransform.localScale = Vector3.one;
             }
         }

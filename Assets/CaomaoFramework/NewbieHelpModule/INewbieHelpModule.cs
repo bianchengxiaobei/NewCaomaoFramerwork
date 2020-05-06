@@ -6,6 +6,6 @@ namespace CaomaoFramework
     {
         void StartNewbieHelp(int newbieMainId);
         void SetVaildArea(RectTransform area);
-        void SetUIToRoot(Transform uiTransform);
+        void SetUIToRoot(RectTransform uiTransform);
     }
 }

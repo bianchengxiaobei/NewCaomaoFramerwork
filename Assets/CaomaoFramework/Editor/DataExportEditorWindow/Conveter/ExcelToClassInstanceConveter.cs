@@ -22,12 +22,32 @@ public class ExcelToClassInstanceConveter
     {
         get => this.m_listInstance.ToArray();
     }
+    /// <summary>
+    /// 计算实例数量（有可能单元格子是空字符）
+    /// </summary>
+    /// <param name="table"></param>
+    /// <param name="row"></param>
+    /// <returns></returns>
+    private int CaculInstance(DataTable table,int row) 
+    {
+        int instanceCount = 0;
+        for (int i = 3; i < row; i++) 
+        {
+            var data = table.Rows[i][0].ToString();
+            if (string.IsNullOrEmpty(data)) 
+            {
+                continue;
+            }
+            instanceCount++;
+        }
+        return instanceCount;
+    }
     public void Parse(DataTable table) 
     {
         var rowData = table.Rows;
         var col = table.Columns.Count;
         var row = rowData.Count;
-        this.m_instanceCount = row - 3;
+        this.m_instanceCount = this.CaculInstance(table,row);
         var className =  rowData[0][0].ToString();
         var type = this.GetSafeType(className);
         if (type == null)
