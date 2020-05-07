@@ -15,5 +15,8 @@ MonoBehaviour:
   MainId: 1
   AllStepIds:
   - Id: 100
-    NextId: -1
+    NextId: 101
     NewbieType: 0
+  - Id: 101
+    NextId: -1
+    NewbieType: 1

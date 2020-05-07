@@ -162,24 +162,21 @@ namespace CaomaoFramework
         /// 设置生成的UI到新手引导根节点
         /// </summary>
         /// <param name="uiTransform"></param>
-        public void SetUIToRoot(RectTransform uiTransform)
+        public Vector3 SetUIToRoot(RectTransform uiTransform)
         {
             if (this.m_bInit == false)
             {
                 Debug.LogError("Init == false");
-                return;
+                return Vector3.zero;
             }
             if (uiTransform != null)
             {
                 uiTransform.SetParent(this.HelpUIRoot);
-                //uiTransform.sizeDelta = Vector2.zero;
-                //uiTransform.anchoredPosition = Vector2.zero;
-                //uiTransform.offsetMax = Vector2.zero;
-                //uiTransform.offsetMin = Vector2.zero;
                 uiTransform.localPosition = Vector3.zero;
-                //uiTransform.localRotation = Quaternion.identity;
                 uiTransform.localScale = Vector3.one;
+                return uiTransform.position;
             }
+            return Vector3.zero;
         }
 
 

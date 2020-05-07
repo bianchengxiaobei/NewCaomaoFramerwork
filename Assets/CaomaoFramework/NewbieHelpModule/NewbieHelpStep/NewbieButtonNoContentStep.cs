@@ -23,6 +23,7 @@ namespace CaomaoFramework
 
         public override void OnFinished()
         {
+            Debug.Log("fwerwOnfishjed");
             this.RemoveButtonListener();
             this.bt_activeButton = null;
             base.OnFinished();
@@ -58,6 +59,7 @@ namespace CaomaoFramework
             if (this.FindActiveButton(out this.bt_activeButton)) 
             {
                 this.AddButtonListener();
+                CaomaoDriver.NewbieHelpModule.SetVaildArea(this.bt_activeButton.image.rectTransform);
                 this.bCheck = false;
                 this.ReEnter();
                 return true;
@@ -75,7 +77,7 @@ namespace CaomaoFramework
         {
             if (this.m_stepData != null && string.IsNullOrEmpty(this.m_stepData.ButtonPath) == false) 
             {
-                btn = GameObject.Find(this.m_stepData.ButtonPath).GetComponent<Button>();
+                btn = CaomaoDriver.UIRoot.Find(this.m_stepData.ButtonPath).GetComponent<Button>();
                 if (btn == null) 
                 {
                     return false;

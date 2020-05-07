@@ -2,6 +2,8 @@
 using System.Collections;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Logical;
+using DG.Tweening;
 
 namespace  CaomaoFramework
 {
@@ -15,13 +17,18 @@ namespace  CaomaoFramework
         private Text lb_characterName;
         private Button bt_tip;
         private Vector3 m_orginPos;
+        public DOTweenAnimation m_enterAnimation;//刚出现的时候带渐变
+        private bool bVisiable = true;
         public void Awake()
         {
             this.bt_tip = this.transform.Find("bt_tip").GetComponent<Button>();
             this.lb_tip = this.bt_tip.transform.Find("lb_tip").GetComponent<Text>();
             this.lb_characterName = this.bt_tip.transform.Find("lb_characterName").GetComponent<Text>();
             this.sp_character = this.transform.Find("sp_character").GetComponent<Image>();
-            this.m_orginPos = this.transform.position;
+            if (this.m_enterAnimation == null) 
+            {
+                this.m_enterAnimation = this.bt_tip.transform.GetComponent<DOTweenAnimation>();
+            }
         }
         /// <summary>
         /// 添加事件
@@ -41,6 +48,11 @@ namespace  CaomaoFramework
             }
         }
 
+        public void SetOrginPos(Vector3 orginPos) 
+        {
+            this.m_orginPos = orginPos;
+        }
+
         public async void SetNewbieHelpStepData(NewbieHelpTipStepData data,int index)
         {
             if (index >= data.Dialogs.Count)
@@ -54,27 +66,27 @@ namespace  CaomaoFramework
             {
                 this.lb_tip.text = tipData.DialogContent;
                 this.lb_characterName.text = tipData.CharacterName;
-                Debug.Log(tipData.CharacterPath);
-                var obj = await CaomaoDriver.ResourceModule.LoadAssetAsyncNoCallback<Object>(tipData.CharacterPath);
-                Debug.Log(obj);
-                this.sp_character.sprite = obj as Sprite;
-                //CaomaoDriver.ResourceModule.LoadAssetAsync(tipData.CharacterPath, (asset) =>
-                //{
-                //    Debug.Log(tipData.CharacterPath);
-                //    this.sp_character.sprite = asset as Sprite;//替换人物的图片
-                //});
+                this.sp_character.sprite = await CaomaoDriver.ResourceModule.
+                    LoadAssetAsyncNoCallback<Sprite>(tipData.CharacterPath);
+                this.SetVisiable(true);
             }
         }
 
         public void SetVisiable(bool bVisiable)
         {
+            if (this.bVisiable == bVisiable) 
+            {
+                return;          
+            }
+            this.bVisiable = bVisiable;
             if (bVisiable)
             {
                 this.transform.position = this.m_orginPos;
+                this.m_enterAnimation?.DORestart();
                 CaomaoDriver.NewbieHelpModule.SetVaildArea(this.bt_tip.image.rectTransform);//添加可以点击区域
             }
             else
-            {
+            {                
                 this.transform.position = Vector3.one * 1000;
             }
         }

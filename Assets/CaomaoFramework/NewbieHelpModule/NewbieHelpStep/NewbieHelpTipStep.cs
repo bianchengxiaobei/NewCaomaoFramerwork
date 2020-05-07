@@ -34,7 +34,7 @@ namespace CaomaoFramework
                 }
                 var rectTransform = UITipObj.GetComponent<RectTransform>();
                 //设置父亲节点，让他可以点击
-                CaomaoDriver.NewbieHelpModule.SetUIToRoot(rectTransform);
+                UITipObj.SetOrginPos(CaomaoDriver.NewbieHelpModule.SetUIToRoot(rectTransform));
                 UITipObj.SetVisiable(false);
                 m_actionInitFinished?.Invoke();
                 m_bStaticInit = true;               
@@ -50,12 +50,10 @@ namespace CaomaoFramework
                 UITipObj.AddButtonListener(this.NextDialogTip);
                 //设置新手提示图片的更改
                 UITipObj.SetNewbieHelpStepData(this.StepData, this.m_iCurIndex);
-                //显示并且能点击
-                UITipObj.SetVisiable(true);
             }
             else
             {
-                Debug.LogError("UITip没有初始化成功!");
+                //Debug.LogError("UITip没有初始化成功!");
                 //Init();
                 m_actionInitFinished = this.Enter;
             }
@@ -66,11 +64,6 @@ namespace CaomaoFramework
             {
                 var filePath = $"{Application.persistentDataPath}/Newbie/NewbieHelp_{this.MainID}_{this.ID}.json";//远程端持久化目录下载 + this.id（归到下载更新里面）
                 this.StepData = CaomaoDriver.DataModule.GetJsonData<NewbieHelpTipStepData>(filePath);
-                if (this.StepData != default(NewbieHelpTipStepData))
-                {
-                    //说明读取成功
-                    Debug.Log("加载成功");
-                }
             }          
         }
 
@@ -95,7 +88,9 @@ namespace CaomaoFramework
         public override void OnFinished()
         {
             this.m_iCurIndex = 0;
-            //this.Tips.Clear();
+            //清除数据，然后关闭tip
+            ClassPoolModule<NewbieHelpTipStep>.Release(this);
+            UITipObj.SetVisiable(false);
             base.OnFinished();
         }     
     }

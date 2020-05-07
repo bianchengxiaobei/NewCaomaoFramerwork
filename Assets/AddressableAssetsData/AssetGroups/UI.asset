@@ -17,6 +17,16 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 7c7ed5673c1ab3b4395ecd667da97084
   m_SerializeEntries:
+  - m_GUID: 70992e2b5b6258b4fbfa8f1aaa3bb4a0
+    m_Address: NewbieButtonTip
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_mainAssetType: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+    m_MainAsset: {fileID: 2307122099021468113, guid: 70992e2b5b6258b4fbfa8f1aaa3bb4a0,
+      type: 3}
+    m_TargetAsset: {fileID: 2307122099021468113, guid: 70992e2b5b6258b4fbfa8f1aaa3bb4a0,
+      type: 3}
   - m_GUID: 77979d083b1b13442910605629fd209d
     m_Address: UITest
     m_ReadOnly: 0
@@ -47,10 +57,8 @@ MonoBehaviour:
     m_SerializedLabels: []
     m_mainAssetType: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
-    m_MainAsset: {fileID: 859073471305299828, guid: fd9074acc2ae54e47bf1f744a6791393,
-      type: 3}
-    m_TargetAsset: {fileID: 859073471305299828, guid: fd9074acc2ae54e47bf1f744a6791393,
-      type: 3}
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 54be41db46d1fa54e855f2d070e86fc9, type: 2}
   m_SchemaSet:
