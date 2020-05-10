@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
-
+using DG.Tweening;
 namespace CaomaoFramework 
 {
     /// <summary>
@@ -12,7 +12,7 @@ namespace CaomaoFramework
     public class NewbieButtonNoContentStep : NewbieHelpStep
     {
         protected NewbieHelpButtonNoContentData m_stepData;//数据
-        protected Button bt_activeButton;
+        protected Button bt_activeButton; 
         private bool m_bInitEvent = false;
         public override void Enter()
         {
@@ -23,7 +23,8 @@ namespace CaomaoFramework
 
         public override void OnFinished()
         {
-            Debug.Log("fwerwOnfishjed");
+            //Debug.Log("fwerwOnfishjed");
+            CaomaoDriver.NewbieHelpModule.SetUIGlowTipNoVisiable();
             this.RemoveButtonListener();
             this.bt_activeButton = null;
             base.OnFinished();
@@ -60,6 +61,8 @@ namespace CaomaoFramework
             {
                 this.AddButtonListener();
                 CaomaoDriver.NewbieHelpModule.SetVaildArea(this.bt_activeButton.image.rectTransform);
+                CaomaoDriver.NewbieHelpModule.SetUIGlowTip(this.bt_activeButton.image.rectTransform,
+                    new Vector2(180,53),new Vector2(360,106));//这里应该填表
                 this.bCheck = false;
                 this.ReEnter();
                 return true;

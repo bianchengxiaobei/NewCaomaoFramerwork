@@ -6,6 +6,8 @@ namespace CaomaoFramework
     {
         void StartNewbieHelp(int newbieMainId);
         void SetVaildArea(RectTransform area);
-        Vector3 SetUIToRoot(RectTransform uiTransform);
+        Vector3 SetUIToRoot(RectTransform uiTransform, int index = 0);
+        void SetUIGlowTip(RectTransform center, Vector2? targetSize = null, Vector2? orginSize = null);
+        void SetUIGlowTipNoVisiable();
     }
 }

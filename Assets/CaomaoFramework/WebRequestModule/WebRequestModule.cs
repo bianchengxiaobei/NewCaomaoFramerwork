@@ -2,6 +2,8 @@
 using System.Collections;
 using UnityEngine.Networking;
 using UnityEngine;
+using System.Threading.Tasks;
+
 namespace CaomaoFramework
 {
     [Module(false)]
@@ -88,10 +90,38 @@ namespace CaomaoFramework
             }
         }
 
-        public void LoadLocalBytes(string url, Action<byte[]> callback,Action error)
+        public async Task<byte[]> LoadLocalBytesNoCallback(string url) 
+        {
+            try
+            {
+                using (UnityWebRequest www = UnityWebRequest.Get(url))
+                {
+                    www.SendWebRequest();
+                    while (www.isDone == false) 
+                    {
+                        await Task.Yield();
+                    }
+                    return www.downloadHandler.data;
+                }
+            }
+            catch (Exception e) 
+            {
+                Debug.LogException(e);
+                return null;
+            }
+        }
+
+
+        public void LoadLocalBytes(string url, Action<byte[]> callback, Action error)
         {
             this.m_fProgess = 0;
-            CaomaoDriver.Instance.StartCoroutine(CLoadLocalBytes(url, callback,error));
+            CaomaoDriver.Instance.StartCoroutine(CLoadLocalBytes(url, callback, error));
+        }
+
+        public void LoadLocalBytesTest(MonoBehaviour root, string url, Action<byte[]> callback, Action error)
+        {
+            this.m_fProgess = 0;
+            root.StartCoroutine(CLoadLocalBytes(url, callback, error));
         }
 
         private IEnumerator CLoadLocalBytes(string url, Action<byte[]> callback, Action error)

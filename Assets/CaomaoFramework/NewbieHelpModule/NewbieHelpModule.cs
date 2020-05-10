@@ -11,6 +11,7 @@ namespace CaomaoFramework
     {
         private CUIHelpMask HelpMask;
         private Transform HelpUIRoot;//引导界面的根节点(存储人物对话界面等)
+        private UINewbieGlow NewbieGlow;//引导发光UI
         private int m_networkNewbieHelpId = int.MinValue;
         private bool m_bInit = false;
         private NewbieHelpAllIdData m_allMainData;
@@ -59,6 +60,15 @@ namespace CaomaoFramework
             }
         }
 
+
+        public void SetUIGlowTip(RectTransform center, Vector2? targetSize = null, Vector2? orginSize = null) 
+        {
+            if (this.NewbieGlow != null) 
+            {
+                this.NewbieGlow.SetGlow(center, targetSize, orginSize);
+            }
+        }
+
         public void StartNewbieHelp(int newbieMainId) 
         {
             CaomaoDriver.UIModule.PreLoadUI<UINewbieHelp>((ui)=>
@@ -67,6 +77,8 @@ namespace CaomaoFramework
                 {
                     this.HelpUIRoot = ui.PanelRoot.Find("NewbieHelpRoot");
                     this.HelpMask = ui.CUIHelpMask;
+                    this.NewbieGlow = ui.CUIHelpGlow;
+                    this.NewbieGlow.SetNoVisiable();
                     ui.PanelRoot.gameObject.SetActive(true);
                     this.m_bInit = true;
                 }
@@ -162,7 +174,7 @@ namespace CaomaoFramework
         /// 设置生成的UI到新手引导根节点
         /// </summary>
         /// <param name="uiTransform"></param>
-        public Vector3 SetUIToRoot(RectTransform uiTransform)
+        public Vector3 SetUIToRoot(RectTransform uiTransform,int index = 0)
         {
             if (this.m_bInit == false)
             {
@@ -172,6 +184,14 @@ namespace CaomaoFramework
             if (uiTransform != null)
             {
                 uiTransform.SetParent(this.HelpUIRoot);
+                if (index == 0)
+                {
+                    uiTransform.SetAsFirstSibling();
+                }
+                else 
+                {
+                    uiTransform.SetSiblingIndex(index);
+                }
                 uiTransform.localPosition = Vector3.zero;
                 uiTransform.localScale = Vector3.one;
                 return uiTransform.position;
@@ -183,6 +203,14 @@ namespace CaomaoFramework
         public void Update()
         {
             
+        }
+
+        public void SetUIGlowTipNoVisiable()
+        {
+            if (this.NewbieGlow != null) 
+            {
+                this.NewbieGlow.SetNoVisiable();
+            }
         }
     }
 }

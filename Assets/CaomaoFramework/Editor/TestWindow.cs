@@ -12,7 +12,7 @@ public class TestWindow : OdinEditorWindow
     public static TestWindow Window;
     private float menuWidth = 180f;
     private CaomaoToolbarDropdown d;
-    private CaomaoDragAndDrop<Object> a;
+    private CaomaoDragAndDrop a;
     [MenuItem("CaomaoTools/TestWindow")]
     public static void ShowWindow()
     {
@@ -23,7 +23,7 @@ public class TestWindow : OdinEditorWindow
     {
         base.Initialize();
 
-        a = new CaomaoDragAndDrop<Object>("fewfe",true,false);
+        a = new CaomaoDragAndDrop("fewfe",this.Ok);
 
         a.SetRemoveItemCallback(this.RemoveItemIndex);
         a.SetChangeItemCallback(this.ChangeListItme);
@@ -51,6 +51,11 @@ public class TestWindow : OdinEditorWindow
         //});
         //d.AddToolbarMenuItems("2", 4, t);
         //d.AddToolbarMenuItems("2", 4, t1);
+    }
+
+    private bool Ok(Object a) 
+    {
+        return true;
     }
 
     private void ChangeListItme(UnityEngine.Object obj)

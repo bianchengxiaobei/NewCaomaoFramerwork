@@ -17,5 +17,7 @@ namespace CaomaoFramework
         public string LocalPPNewbieHelpName;
         [LabelText("配置文件所在的文件目录")]
         public string ConfigPathDir;
+        [LabelText("GIF文件所在的文件目录")]
+        public string GIFLoadPathDir;
     }
 }

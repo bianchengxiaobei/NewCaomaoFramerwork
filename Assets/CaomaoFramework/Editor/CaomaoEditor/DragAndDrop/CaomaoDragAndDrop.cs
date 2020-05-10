@@ -1,40 +1,47 @@
+using Sirenix.Utilities;
 using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 using Object = UnityEngine.Object;
-public class CaomaoDragAndDrop<T> where T : Object
+public class CaomaoDragAndDrop
 {
     private ReorderableList m_packableList;//显示的list的组件
-    private List<T> m_listObjs = new List<T>();//存储的数据 
+    private List<Object> m_listObjs = new List<Object>();//存储的数据 
 
     private bool m_bPackableListExpanded = false;//是否list的是折叠的
-    private Action<T> m_actionChangeListItem;//当改变list的item的时候触发回调
+    private Action<Object> m_actionChangeListItem;//当改变list的item的时候触发回调
     private Action<int> m_actionSelectItemIndex;//选中list中的item的时候触发回调
-    private Action<T> m_actionSelectItem;//选中list中的item的时候触发回调
+    private Action<Object> m_actionSelectItem;//选中list中的item的时候触发回调
+
+    private Func<Object,bool> m_funcFilterObject;//过滤不能选择的item
 
 
     private Action<int> m_actionRemoveItemIndex;//移除list中的item的时候触发回调
-    private Action<T> m_actionRemoveItem;//移除list中的item的时候触发回调
+    private Action<Object> m_actionRemoveItem;//移除list中的item的时候触发回调
 
     private GUIContent m_labelObjectList;
 
+    private string searchFilter;
 
     private const float DefaultItemHeight = 18f;
+    private bool m_bAddButton = false;
+    private int? m_selectItemIndex = null;
 
 
-
-    public CaomaoDragAndDrop(string title, bool dragable, bool displayHeader,bool disAddButton = true,bool disRemoveButton = true,float defaluItemHeight = DefaultItemHeight)
+    public CaomaoDragAndDrop(string title,Func<Object,bool> funcSearchFilter, string searchFilter = "", bool dragable = true, bool displayHeader = false,bool disAddButton = true,bool disRemoveButton = true,float defaluItemHeight = DefaultItemHeight)
     {
         //初始化list组件
-        this.m_packableList = new ReorderableList(this.m_listObjs,typeof(T),dragable,displayHeader,disAddButton,disRemoveButton);
+        this.m_packableList = new ReorderableList(this.m_listObjs,typeof(Object),dragable,displayHeader,disAddButton,disRemoveButton);
         this.m_packableList.drawElementCallback = this.DrawElement;
         this.m_packableList.onSelectCallback = this.OnSelectItem;
-        //this.m_packableList.onAddCallback = this.OnAddItem;
+        this.m_packableList.onAddCallback = this.OnAddItem;
         this.m_packableList.onRemoveCallback = this.OnRemoveItem;
         this.m_packableList.elementHeight = defaluItemHeight;
         this.m_labelObjectList = new GUIContent(title ?? "List对象选择器(可拖拽)");
+        this.searchFilter = searchFilter;
+        this.m_funcFilterObject = funcSearchFilter;
     }
 
     private void OnRemoveItem(ReorderableList list)
@@ -57,7 +64,8 @@ public class CaomaoDragAndDrop<T> where T : Object
     {
         //出现选中project里面的资源，比如文件夹，图片等等
         //需要在这里过滤
-        
+        EditorGUIUtility.ShowObjectPicker<Object>(null, false, this.searchFilter, -1);
+        this.m_bAddButton = true;
     }
 
     /// <summary>
@@ -69,33 +77,17 @@ public class CaomaoDragAndDrop<T> where T : Object
     /// <param name="focused"></param>
     private void DrawElement(Rect rect, int index, bool selected, bool focused)
     {
-        //Debug.Log("12222:"+index);
         if (index >= this.m_listObjs.Count)
         {
             return;
         }
-        //Debug.Log("3535");
         var controllId = EditorGUIUtility.GetControlID(-1, FocusType.Passive);
         var previoursObject = this.m_listObjs[index];
-        T changedObject = null;
-        if (previoursObject is Object)
-        {
-            Object temp = previoursObject as Object;
-            changedObject = EditorGUI.ObjectField(rect, temp, typeof(T), false) as T;
-        }
-        else if (previoursObject.GetType() == typeof(string))
-        {
-            var temp = previoursObject as string;
-            EditorGUI.LabelField(rect, temp);
-            changedObject = temp as T;
-        }
-        //Debug.Log("PreObject:"+previoursObject.name);
-        //Debug.Log("ChangeObject:"+changedObject.name);
+        Object changedObject = EditorGUI.ObjectField(rect, previoursObject, typeof(Object), false) as Object;
         if (previoursObject != changedObject)
         {
             if (previoursObject != null)
             {
-                //Debug.Log("ChangeListItem:"+(changedObject as UnityEngine.Object).name);
                 this.m_actionChangeListItem?.Invoke(previoursObject);
             }
             this.m_listObjs[index] = changedObject;//改变list的里面item
@@ -111,6 +103,7 @@ public class CaomaoDragAndDrop<T> where T : Object
     private void OnSelectItem(ReorderableList list)
     {
         var selectIndex = list.index;
+        this.m_selectItemIndex = selectIndex;
         this.m_actionSelectItemIndex?.Invoke(selectIndex);
         if (this.m_actionSelectItem != null)
         {
@@ -129,7 +122,7 @@ public class CaomaoDragAndDrop<T> where T : Object
 
 
 
-    public void SetRemoveItemCallback(Action<T> callback)
+    public void SetRemoveItemCallback(Action<Object> callback)
     {
         this.m_actionRemoveItem = callback;
     }
@@ -139,7 +132,7 @@ public class CaomaoDragAndDrop<T> where T : Object
         this.m_actionRemoveItemIndex = callback;
     }
 
-    public void SetSelectItemCallback(Action<T> callback)
+    public void SetSelectItemCallback(Action<Object> callback)
     {
         this.m_actionSelectItem = callback;
     }
@@ -152,7 +145,7 @@ public class CaomaoDragAndDrop<T> where T : Object
     /// 改变list里面item的时候，触发的回调
     /// </summary>
     /// <param name="callback"></param>
-    public void SetChangeItemCallback(Action<T> callback)
+    public void SetChangeItemCallback(Action<Object> callback)
     {
         this.m_actionChangeListItem = callback;
     }
@@ -169,7 +162,7 @@ public class CaomaoDragAndDrop<T> where T : Object
         var currentEvent = Event.current;
         var userEvent = false;
         Rect rect = EditorGUILayout.GetControlRect();
-        //Rect rect = EditorGUILayout.BeginHorizontal();
+        //Rect rect = EditorGUILayout.BeginVertical();
         //Debug.Log(rect);
         var controllId = GUIUtility.GetControlID(0);
         //Debug.Log(controllId);
@@ -190,7 +183,7 @@ public class CaomaoDragAndDrop<T> where T : Object
                             DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
                             if (currentEvent.type == EventType.DragPerform)
                             {
-                                var temp = obj as T;
+                                var temp = obj as Object;
                                 this.m_listObjs.Add(temp);
                                 acceptObj = true;
                                 DragAndDrop.activeControlID = 0;
@@ -200,7 +193,6 @@ public class CaomaoDragAndDrop<T> where T : Object
                                 DragAndDrop.activeControlID = controllId;
                             }
                         }
-
                         if (acceptObj)
                         {
                             GUI.enabled = true;
@@ -217,23 +209,33 @@ public class CaomaoDragAndDrop<T> where T : Object
             case EventType.ExecuteCommand:
                 Debug.Log("ExcuteCommand:" + currentEvent.commandName);
                 //ExcuteCommand:ObjectSelectorUpdated
-                if (currentEvent.commandName == "ObjectSelectorUpdated")
-                {
-                    //选择更新
-
-                }
-                else if (currentEvent.commandName == "ObjectSelectorClosed")
+                if (currentEvent.commandName == "ObjectSelectorClosed")
                 {
                     //选择结束
-                    //var obj = ObjectSelector.GetCurrentObject();
-                    //var obj  = Selection
-                    var selectObj = Selection.activeObject;
-                    if (selectObj != null)
+                    var obj = EditorGUIUtility.GetObjectPickerObject();
+                    if (obj != null && this.m_funcFilterObject(obj))
                     {
-                        Debug.Log(selectObj.name);
+                        Debug.Log(obj.name);
+                        if (this.m_bAddButton)
+                        {
+                            //说明是添加
+                            this.m_bAddButton = false;
+                            this.m_listObjs.Add(obj);
+                        }
+                        else 
+                        {
+                            //说明是改变
+                            if (this.m_selectItemIndex != null)
+                            {
+                                this.m_listObjs[this.m_selectItemIndex.Value] = obj;
+                                this.m_selectItemIndex = null;
+                            }
+                            else 
+                            {
+                                this.m_listObjs[0] = obj;
+                            }
+                        }
                     }
-
-                    //Debug.Log(Selection.activeObject.name);
                 }
 
                 userEvent = true;
@@ -242,6 +244,8 @@ public class CaomaoDragAndDrop<T> where T : Object
 
         if (this.m_labelObjectList != null)
         {
+            rect.x = 0;
+            rect.y = 0;
             this.m_bPackableListExpanded = EditorGUI.Foldout(rect, this.m_bPackableListExpanded, this.m_labelObjectList, true);
         }
         if (userEvent)
@@ -252,10 +256,12 @@ public class CaomaoDragAndDrop<T> where T : Object
         if (this.m_bPackableListExpanded)
         {
             EditorGUI.indentLevel++;
-            this.m_packableList.DoLayoutList();
+            //this.m_packableList.DoLayoutList();
+            var foldRect = rect.AddY(this.m_packableList.headerHeight);
+            this.m_packableList.DoList(foldRect);
             EditorGUI.indentLevel--;
         }
-        //EditorGUILayout.EndHorizontal();
+        //EditorGUILayout.EndVertical();
     }
 }
 

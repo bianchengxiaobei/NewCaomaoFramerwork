@@ -6,6 +6,7 @@ using System;
 public class UINewbieHelp : UIBase
 {
     public CUIHelpMask CUIHelpMask;
+    public UINewbieGlow CUIHelpGlow;
     public UINewbieHelp()
     {
         this.m_bNotDestroy = false;
@@ -31,6 +32,7 @@ public class UINewbieHelp : UIBase
     protected override void InitGraphicComponet()
     {
         this.CUIHelpMask = this.m_oRoot.Find("HelpMask").GetComponent<CUIHelpMask>();
+        this.CUIHelpGlow = this.m_oRoot.Find("NewbieHelpRoot/GlowEffect").GetComponent<UINewbieGlow>();
     }
 
     protected override void OnAddListener()

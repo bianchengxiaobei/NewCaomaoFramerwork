@@ -53,7 +53,7 @@ namespace CaomaoFramework
                     return;
                 }
                 var rectTransorm = UITip.GetComponent<RectTransform>();
-                CaomaoDriver.NewbieHelpModule.SetUIToRoot(rectTransorm);
+                CaomaoDriver.NewbieHelpModule.SetUIToRoot(rectTransorm,0);
                 UITip.SetVisiable(false);
                 callback?.Invoke();
             }
