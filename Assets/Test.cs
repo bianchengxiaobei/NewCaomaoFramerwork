@@ -1,36 +1,88 @@
-﻿using System;
+using System;
 using UnityEngine;
-using UnityEngine.UI;
-using Sirenix.OdinInspector;
+using Unity.Collections.LowLevel.Unsafe;
+using Unity.Jobs;
+using Unity.IO.LowLevel.Unsafe;
+using Unity.Collections;
+using System.IO;
 using CaomaoFramework;
 
 public class Test : MonoBehaviour
 {
-    private WebRequestModule a;
+    //private ReadHandle readHandle;
+    //NativeArray<ReadCommand> cmds;
+    private CaomaoGifModule module = new CaomaoGifModule();
+    //public unsafe void Start()
+    //{
+    //    string filePath = Path.Combine(Application.streamingAssetsPath, "myfile.bin");
+    //    cmds = new NativeArray<ReadCommand>(1, Allocator.Persistent);
+    //    ReadCommand cmd;
+    //    cmd.Offset = 0;
+    //    cmd.Size = 1024;
+    //    cmd.Buffer = (byte*)UnsafeUtility.Malloc(cmd.Size, 16, Allocator.Persistent);
+    //    cmds[0] = cmd;
+    //    Debug.Log(filePath);
+    //    readHandle = AsyncReadManager.Read(filePath, (ReadCommand*)cmds.GetUnsafePtr(), 1);
+    //}
+
+    //public unsafe void Update()
+    //{
+    //    if (readHandle.IsValid() && readHandle.Status != ReadStatus.InProgress)
+    //    {
+    //        Debug.LogFormat("Read {0}", readHandle.Status == ReadStatus.Complete ? "Successful" : "Failed");
+    //        readHandle.Dispose();
+    //        UnsafeUtility.Free(cmds[0].Buffer, Allocator.Persistent);
+    //        cmds.Dispose();
+    //    }
+    //}
+    //private byte[] a = new byte[256];
+
+    //private void Awake()
+    //{
+    //    AsyncReadManager.Read();
+    //}
+
+    //private async void Start()
+    //{
+
+    //    //Debug.Log(data.Length);
+    //}
+
+    //private unsafe void Update()
+    //{
+    //    var job = new JOb1();
+    //    job.a = 1;
+
+    //    fixed (byte* temp = this.a)
+    //    {
+    //        job.b = temp;
+    //    }
+    //    var handler = job.Schedule();
+    //    handler.Complete();
+    //} 
     private void Awake()
     {
-        a = new WebRequestModule();
+        module.Init();
     }
 
-    private async void Start()
+    private void Start()
     {
-        var dllPath = $"{Application.persistentDataPath}/{CaomaoGameGobalConfig.Instance.HotFixDllName}";
-        //Debug.Log(dllPath);
-        Debug.Log("start:" + Time.frameCount);
-        var data = await a.LoadLocalBytesNoCallback(dllPath);
-        Debug.Log("end:"+Time.frameCount);
-        Debug.Log("data:" + data.Length);
-        Debug.Log("start1:" + Time.frameCount);
-        a.LoadLocalBytesTest(this,dllPath, (temp) => 
-        {
-            Debug.Log("end1:" + Time.frameCount);
-            Debug.Log("data1:" + temp.Length);
-        }, null);
-        //Debug.Log(data.Length);
+        module.PlayGif("test.gif");
     }
 
-    private void Update()
+    private void TestAction()
     {
-        
-    } 
+        Debug.Log("TestAction");
+    }
+}
+
+public unsafe struct JOb1 : IJob
+{
+    public int a;
+    public byte* b;
+
+    public void Execute()
+    {
+        Debug.Log(a);
+    }
 }

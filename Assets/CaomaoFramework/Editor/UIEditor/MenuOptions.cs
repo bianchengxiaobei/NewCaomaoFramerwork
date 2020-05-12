@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -27,6 +27,16 @@ namespace CaomaoFramework.UIEditor
         private const float kThickHeight = 30f;
         private const float kThinHeight = 20f;
         private static Vector2 s_ThickElementSize = new Vector2(kWidth, kThickHeight);
+        private static Vector2 s_VertialTabSize = new Vector2(100,500);//创建Vertial Tab的时候大小
+        private static Vector2 s_HorTabSize = new Vector2(500, 100);//创建Hor Tab的时候大小
+
+        private static Vector2 s_VertialTabButtonSize = new Vector2(80,0);
+        private static Vector2 s_HorTabButtonSize = new Vector2(0, 80);
+
+        private static float s_VertialTabLayoutHeight = 70f;
+        private static float s_HorizontalTabLayoutWidth = 70f;
+
+
 
         private static Color s_DefaultSelectableColor = new Color(1f, 1f, 1f, 1f);
         private static Color s_TextColor = new Color(50f / 255f, 50f / 255f, 50f / 255f, 1f);
@@ -64,6 +74,175 @@ namespace CaomaoFramework.UIEditor
             var go = CreateNumberRedButton(GetStandardResources());
             PlaceUIElementRoot(go, menuCommand);
         }
+
+        [MenuItem("GameObject/UI/Vertical Tab（带Text）", false)]
+        public static void AddTextTab(MenuCommand menuCommand)
+        {
+            var go = CreateVerticalTab(GetStandardResources(),true);
+            PlaceUIElementRoot(go, menuCommand);
+        }
+        [MenuItem("GameObject/UI/Vertical Tab(不带Text)", false)]
+        public static void AddNoTextTab(MenuCommand menuCommand)
+        {
+            var go = CreateVerticalTab(GetStandardResources(),false);
+            PlaceUIElementRoot(go, menuCommand);
+        }
+        [MenuItem("GameObject/UI/Horizontal Tab(带Text)", false)]
+        public static void AddHorTextTab(MenuCommand menuCommand)
+        {
+            var go = CreateHorTab(GetStandardResources(), true);
+            PlaceUIElementRoot(go, menuCommand);
+        }
+
+        [MenuItem("GameObject/UI/Horizontal Tab(不带Text)")]
+        public static void AddHorNoTextTab(MenuCommand menuCommand)
+        {
+            var go = CreateHorTab(GetStandardResources(), false);
+            PlaceUIElementRoot(go, menuCommand);
+        }
+
+
+
+
+        public static GameObject CreateHorTab(DefaultControls.Resources resources, bool bText)
+        {
+            GameObject root = CreateUIElementRoot(CaomaoUIEditorConfig.Instance.tabName, s_HorTabSize);
+            root.name = "Horizontal Tab";
+            //添加Image
+            var rootImage = root.AddComponent<Image>();
+            rootImage.raycastTarget = false;
+            //添加Tab
+            var tab = root.AddComponent<CUITab>();
+            //添加VerticalLayout
+            var vertical = root.AddComponent<HorizontalLayoutGroup>();
+            //vertical.childControlHeight = true;
+            vertical.childControlWidth = true;
+            vertical.childForceExpandWidth = false;
+            vertical.childForceExpandHeight = true;
+            vertical.childAlignment = TextAnchor.MiddleCenter;
+
+            //创建子TabButton
+            for (int i = 0; i < 6; i++)
+            {
+                var tabButton = CreateUIElementRoot(CaomaoUIEditorConfig.Instance.tabButtonName, s_HorTabButtonSize);
+                //添加image
+                var tabButtonImage = tabButton.AddComponent<Image>();
+                tabButtonImage.color = Color.red;
+                if (tabButtonImage.color.a == 0)
+                {
+                    var tempRedColor = Color.red;
+                    tempRedColor.a = 1;
+                    tabButtonImage.color = tempRedColor;
+                }
+                tabButtonImage.raycastTarget = true;
+                //添加highSpriteToggle
+                var highSprite = tabButton.AddComponent<CUIHighSpriteTabToggle>();
+                highSprite.Index = i;
+                highSprite.Parent = tab;
+                highSprite.transition = Selectable.Transition.None;
+                //添加LayoutElement
+                var layoutElement = tabButton.AddComponent<LayoutElement>();
+                //layoutElement.minHeight = s_VertialTabLayoutHeight;
+                layoutElement.minWidth = s_HorizontalTabLayoutWidth;
+                tabButton.name = $"Tab{i.ToString()}";
+                if (bText)
+                {
+                    //创建Text
+                    var tabButtonText = new GameObject(CaomaoUIEditorConfig.Instance.textName);
+                    var rectTransform = tabButtonText.AddComponent<RectTransform>();
+                    SetParentAndAlign(tabButtonText, tabButton);
+                    var text = tabButtonText.AddComponent<Text>();
+                    text.text = "Tab" + i.ToString();
+                    text.raycastTarget = false;
+                    text.alignment = TextAnchor.MiddleCenter;
+                    SetDefaultTextValues(text);
+                    rectTransform.anchorMin = Vector2.zero;
+                    rectTransform.anchorMax = Vector2.one;
+                    rectTransform.sizeDelta = Vector2.zero;
+                    highSprite.lb_content = text;
+                }
+                SetParentAndAlign(tabButton, root);
+                //highSprite.enabled = true;
+            }
+            return root;
+        }
+
+
+        /// <summary>
+        /// 创建vertical的Tab
+        /// </summary>
+        /// <param name="resources"></param>
+        /// <returns></returns>
+        public static GameObject CreateVerticalTab(DefaultControls.Resources resources,bool bText)
+        {
+            GameObject root = CreateUIElementRoot(CaomaoUIEditorConfig.Instance.tabName, s_VertialTabSize);
+            root.name = "Vertical Tab";
+            //添加Image
+            var rootImage = root.AddComponent<Image>();
+            rootImage.raycastTarget = false;
+            //添加Tab
+            var tab = root.AddComponent<CUITab>();
+            //添加VerticalLayout
+            var vertical = root.AddComponent<VerticalLayoutGroup>();
+            vertical.childControlHeight = true;
+            vertical.childForceExpandWidth = true;
+            vertical.childForceExpandHeight = false;
+            vertical.childAlignment = TextAnchor.MiddleCenter;
+
+            //创建子TabButton
+            for (int i = 0; i < 6; i++)
+            {
+                var tabButton = CreateUIElementRoot(CaomaoUIEditorConfig.Instance.tabButtonName,s_VertialTabButtonSize);
+                //添加image
+                var tabButtonImage = tabButton.AddComponent<Image>();
+                tabButtonImage.color = Color.red;
+                if (tabButtonImage.color.a == 0)
+                {
+                    var tempRedColor = Color.red;
+                    tempRedColor.a = 1;
+                    tabButtonImage.color = tempRedColor;
+                }
+                tabButtonImage.raycastTarget = true;
+                //添加highSpriteToggle
+                var highSprite = tabButton.AddComponent<CUIHighSpriteTabToggle>();
+                highSprite.Index = i;
+                highSprite.Parent = tab;
+                highSprite.transition = Selectable.Transition.None;             
+                //添加LayoutElement
+                var layoutElement = tabButton.AddComponent<LayoutElement>();
+                layoutElement.minHeight = s_VertialTabLayoutHeight;
+                //tabButton.name = "Tab" + i.ToString();
+                tabButton.name = $"Tab{i.ToString()}";
+                if (bText)
+                {
+                    //创建Text
+                    var tabButtonText = new GameObject(CaomaoUIEditorConfig.Instance.textName);
+                    var rectTransform = tabButtonText.AddComponent<RectTransform>();
+                    SetParentAndAlign(tabButtonText, tabButton);
+                    var text = tabButtonText.AddComponent<Text>();
+                    text.text = "Tab" + i.ToString();
+                    text.raycastTarget = false;
+                    text.alignment = TextAnchor.MiddleCenter;
+                    SetDefaultTextValues(text);
+                    rectTransform.anchorMin = Vector2.zero;
+                    rectTransform.anchorMax = Vector2.one;
+                    rectTransform.sizeDelta = Vector2.zero;
+                    highSprite.lb_content = text;
+                }
+                SetParentAndAlign(tabButton, root);
+                highSprite.enabled = true;
+            }
+            return root;
+        }
+
+
+
+
+
+
+
+
+
         public static GameObject CreateNumberRedButton(DefaultControls.Resources resources)
         {
             GameObject buttonRoot = CreateUIElementRoot(CaomaoUIEditorConfig.Instance.buttonName, s_ThickElementSize);

@@ -15,4 +15,6 @@ MonoBehaviour:
   RedPointTreePath: RedPointTreeDataConfig
   HotFixDllName: CaomaoHotFix.dll
   HotFixPdbName: CaomaoHotFix.pdb
+  LocalPPNewbieHelpName: 
   ConfigPathDir: 
+  GIFLoadPathDir: C:/Users/Administrator/AppData/LocalLow/DefaultCompany/CaomaoFramework

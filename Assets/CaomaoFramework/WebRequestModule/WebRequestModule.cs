@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using UnityEngine.Networking;
 using UnityEngine;
@@ -31,6 +31,36 @@ namespace CaomaoFramework
             CaomaoDriver.Instance.StartCoroutine(CDownloadText(url, callback));
         }
         /// <summary>
+        /// 下载文本无回调
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="onError"></param>
+        public async Task<string> DownloadTextNoCallback(string url, Action<string> onError)
+        {
+            this.m_fProgess = 0;
+            try
+            {
+                using (UnityWebRequest www = new UnityWebRequest(url))
+                {
+                    www.SendWebRequest();
+                    while (www.isDone == false)
+                    {
+                        await Task.Yield();
+                    }
+                    return www.downloadHandler.text;
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+                onError?.Invoke(e.ToString());
+                return null;
+            }
+        }
+            
+
+
+        /// <summary>
         /// 下载数据
         /// </summary>
         /// <param name="url"></param>
@@ -40,6 +70,38 @@ namespace CaomaoFramework
             this.m_fProgess = 0;
             CaomaoDriver.Instance.StartCoroutine(CDownloadBytes(url, callback));
         }
+
+        /// <summary>
+        /// 下载数据无回调
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="onError"></param>
+        /// <returns></returns>
+        public async Task<byte[]> DownloadBytesNoCallback(string url, Action<string> onError)
+        {
+            this.m_fProgess = 0;
+            try
+            {
+                using (UnityWebRequest www = new UnityWebRequest(url))
+                {
+                    www.SendWebRequest();
+                    while (www.isDone == false)
+                    {
+                        this.m_fProgess = www.downloadProgress;
+                        await Task.Yield();
+                    }
+                    return www.downloadHandler.data;
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+                onError?.Invoke(e.ToString());
+                return null;
+            }
+        }
+
+
 
 
         private IEnumerator CDownloadText(string url, Action<string> callback)
@@ -90,7 +152,7 @@ namespace CaomaoFramework
             }
         }
 
-        public async Task<byte[]> LoadLocalBytesNoCallback(string url) 
+        public async Task<byte[]> LoadLocalBytesNoCallback(string url,Action<string> onError) 
         {
             try
             {
@@ -107,6 +169,7 @@ namespace CaomaoFramework
             catch (Exception e) 
             {
                 Debug.LogException(e);
+                onError?.Invoke(e.ToString());
                 return null;
             }
         }
@@ -155,6 +218,31 @@ namespace CaomaoFramework
         {
             CaomaoDriver.Instance.StartCoroutine(CLoadLocalText(url, callback, error));
         }
+
+
+        public async Task<string> LoadLocalTextNoCallback(string url, Action<string> onError)
+        {
+            try
+            {
+                using (UnityWebRequest www = UnityWebRequest.Get(url))
+                {
+                    www.SendWebRequest();
+                    while (www.isDone == false)
+                    {
+                        await Task.Yield();
+                    }
+                    return www.downloadHandler.text;
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+                onError?.Invoke(e.ToString());
+                return null;
+            }
+        }
+
+
         private IEnumerator CLoadLocalText(string url, Action<string> callback, Action error)
         {
             //从本地加载dll
