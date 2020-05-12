@@ -11,7 +11,8 @@ public class Test : MonoBehaviour
 {
     //private ReadHandle readHandle;
     //NativeArray<ReadCommand> cmds;
-    private CaomaoGifModule module = new CaomaoGifModule();
+    //private CaomaoGifModule module = new CaomaoGifModule();
+    public CUIScrollBroadcast a;
     //public unsafe void Start()
     //{
     //    string filePath = Path.Combine(Application.streamingAssetsPath, "myfile.bin");
@@ -62,12 +63,16 @@ public class Test : MonoBehaviour
     //} 
     private void Awake()
     {
-        module.Init();
+        //module.Init();
     }
 
     private void Start()
     {
-        module.PlayGif("test.gif");
+        //module.PlayGif("test.gif");
+        //a.AddScrollBroadcast("公司想法违法违法违规为国外高危岗位共分为");
+        //a.AddScrollBroadcast("公司想法违法违法违规为国外高危岗位共分为");
+        a.AddScrollBroadcast("公司想法违法<color=red>违法违规为</color>国外高危岗位共分为",-1);
+        //a.AddScrollBroadcast("公司想法违法违法违规为国外高危岗位共分为");
     }
 
     private void TestAction()

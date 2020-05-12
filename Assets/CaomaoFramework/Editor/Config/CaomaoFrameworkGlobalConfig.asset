@@ -14,3 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Version: 1.1.1
   CaomaoGUIStyleSBPath: Assets/CaomaoFramework/Editor/CaomaoEditor/GUIContent/GUIStypeSB.asset
+  CaomaoHotfixDllFolder: C:/Users/Administrator/AppData/LocalLow/DefaultCompany/CaomaoFramework
+  CaomaoHotfixSourceFolder: E:/Unity5Plugin/CaomaoFramework/HotFix/CaomaoHotFix/DLL

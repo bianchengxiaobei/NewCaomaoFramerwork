@@ -39,13 +39,13 @@ namespace CaomaoFramework
             {
                 Id = config.ChannelId,
                 Name = config.ChannelName,
-                Importance = config.Importance,
+                Importance = (Importance)config.Importance,
                 Description = config.Description,
                 CanBypassDnd = config.CanBypassDnd,
                 CanShowBadge = config.CanShowBadge,
                 EnableLights = config.EnableLights,
                 EnableVibration = config.EnableVibration,
-                LockScreenVisibility = config.LockScreenVisibility
+                LockScreenVisibility = (LockScreenVisibility)config.LockScreenVisibility
             };
             AndroidNotificationCenter.RegisterNotificationChannel(channel);
             this.CurChannelId = config.ChannelId;
