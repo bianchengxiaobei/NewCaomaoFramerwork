@@ -8,7 +8,6 @@ using UnityEngine;
 public class CaomaoGIFDecoder : ICaomaoGIFDecoder
 {
     private MemoryStream stream;
-    private StringBuilder sb = new StringBuilder();
     private byte[] m_readCache = new byte[256];//读取的缓存区
     private int m_frameCount = 0;
     private bool m_bFinished = false;
@@ -36,7 +35,7 @@ public class CaomaoGIFDecoder : ICaomaoGIFDecoder
     /// </summary>
     public void ReadHeader()
     {
-        var id = this.ReadString(6);//前面6个字符是GIF89a
+        var id = this.ReadString(6);//前面6个字符是GIF89a（GIF署名）
         if (id.StartsWith("GIF") == false)
         {
             //说明不是GIF格式的
@@ -87,15 +86,26 @@ public class CaomaoGIFDecoder : ICaomaoGIFDecoder
     }
 
 
-
+    /// <summary>
+    /// 逻辑屏幕标识符（Logical Screen Descriptor）
+    /// 8bit Width
+    /// 8bit Heigth
+    /// 1bit m 3bit cr 1bit s 3bit pixel
+    /// 8bit 背景色
+    /// 8bit Pixel Aspect Radio
+    /// </summary>
     private void ReadLsd()
     {
         this.m_width = this.ReadShort();
         this.m_height = this.ReadShort();
         var packed = this.ReadByte();
         this.m_golbalColorTableFlag = (packed & 0x80) != 0; // 1   : global color table flag
-                                         // 2-4 : color resolution
-                                         // 5   : gct sort flag
+                                                            // 2-4 : color resolution
+                                                            // 5   : gct sort flag
+        Debug.Log(this.m_golbalColorTableFlag);
+        this.m_golbalColorTableFlag = (packed >> 7) > 0;
+        Debug.Log(this.m_golbalColorTableFlag);
+        //7 -> 0111
         this.m_golbalColorTabSize = 2 << (packed & 7); // 6-8 : gct size
         this.m_bgIndex = this.ReadByte();
         this.m_pixelAspectRatio = this.ReadByte();
