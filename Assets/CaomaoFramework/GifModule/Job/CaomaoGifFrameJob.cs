@@ -25,6 +25,9 @@ namespace CaomaoFramework
         public int position;//读取的位置
 
 
+        //需要传递给外部的数据
+        public NativeArray<bool> allFrameFinished;//是否所有的帧已经完成
+        public NativeArray<int> allFrameCount;//所有帧的数量
 
         public int imageX;
         public int imageY;
@@ -57,7 +60,7 @@ namespace CaomaoFramework
         public int lastImageWidth;
         public int lastImageHeigth;
         public int lastBgColor = 0;
-
+        public int loopCount = 0;
 
 
 
@@ -76,7 +79,41 @@ namespace CaomaoFramework
             this.imageBigData = new NativeArray<int>(this.imageWidth * this.imageHeight, Allocator.TempJob);
             this.imageData = new NativeList<byte>(this.imageWidth * this.imageHeight * sizeof(int), Allocator.TempJob);
         }
-
+        /// <summary>
+        /// 应用的扩展部分
+        /// </summary>
+        private void ReadApplicationExtension()
+        {
+            this.ReadBlock();
+            var app = "";
+            for (var i = 0; i < 11; i++)
+            {
+                app += (char)this.blockData[i];
+            }
+            if (app.Equals("NETSCAPE2.0"))
+            {
+                ReadNetscapeExt();
+            }
+            else
+            {
+                Skip();
+            }              
+        }
+        /// <summary>
+        ///  Reads Netscape extenstion to obtain iteration count
+        /// </summary>
+        private void ReadNetscapeExt()
+        {
+            do
+            {
+                ReadBlock();
+                if (this.blockData[0] != 1) continue;
+                // loop count sub-block
+                var b1 = this.blockData[1] & 0xff;
+                var b2 = this.blockData[2] & 0xff;
+                this.loopCount = (b2 << 8) | b1;
+            } while ((this.blockSize > 0) && !this.bError);
+        }
 
         private void ReadNextFrame(int position)
         {
@@ -85,12 +122,26 @@ namespace CaomaoFramework
             var code = this.ReadByteToInt();
             switch (code)
             {
-                case 0x2C:
+                case 0x2C://图像数据部分
                     this.ReadImage();
                     break;
-                case 0x21:
+                case 0x21://扩展部分
+                    code = this.ReadByteToInt();
+                    switch (code)
+                    {
+                        case 0xf9:
+                            this.ReadGraphicControllExt();
+                            break;
+                        case 0xff:
+                            this.ReadApplicationExtension();
+                            break;
+                        default:
+                            this.Skip();
+                            break;
+                    }
                     break;
-                case 0x3b:
+                case 0x3b://终止的标志
+
                     break;
                 case 0x00:
                     break;
@@ -99,6 +150,29 @@ namespace CaomaoFramework
                     break;
             }
         }
+
+        //扩展块标识   8bit
+        //图形控制扩展标签   8bit
+        //块大小  8bit
+        //保留 3 处置方法 3 用户输入标志 i 1 透明色标志 t 1  ==> 8bit
+        //延时时间 8bit
+        //透明色索引 8bit
+        //块终结器 8bit
+        private void ReadGraphicControllExt()
+        {
+            this.ReadByteToInt();//BlockSize
+            var packed = this.ReadByteToInt();
+            this.dispose = (packed & 0x1c) >> 2;
+            if (this.dispose == 1)
+            {
+                this.dispose = 0;
+            }
+            this.transparency = (packed & 1) != 0;
+            this.delay = this.ReadShort() / 100f;//延迟多少秒进行下一帧
+            this.transIndex = this.ReadByteToInt();
+            this.ReadByteToInt();//块终结器
+        }
+
         private int ReadByteToInt()
         {
             var data = this.gifData[this.position++];
@@ -267,7 +341,7 @@ namespace CaomaoFramework
             {
                 this.ReadBlock();
             }
-            while (this.blockSize > 0);
+            while (this.blockSize > 0 && this.bError == false);
         }
 
         private int ReadShort()
