@@ -1,5 +1,8 @@
-﻿using System.Text;
+using System.Text;
 using System.Collections.Generic;
+using UnityEngine;
+using System.IO;
+using System;
 namespace CaomaoFramework
 {
     public class TrieTreeWordFilterModule : IWordFilterModule
@@ -7,16 +10,40 @@ namespace CaomaoFramework
         private TrieNode[] m_arrayRoot = new TrieNode[char.MaxValue + 1];
         public void Init()
         {
-            
+            var path = Application.dataPath + "/WordFilter.txt";
+            if (File.Exists(path))
+            {
+                Debug.Log("Ok");
+            }
+            try
+            {
+                //var text = File.ReadAllText(path,Encoding.Unicode);
+                //if (string.IsNullOrEmpty(text) == false)
+                //{
+                //    Debug.Log("3r432r");
+                //}
+                Debug.Log(char.MaxValue);
+                //var allLine = File.ReadAllLines(path,Encoding.Unicode);
+                //if (allLine != null && allLine.Length > 0)
+                //{
+                //    Debug.Log("fwefew");
+                //}
+                //this.InitWorld(allLine);
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }                    
         }
         public void InitWorld(ICollection<string> words)
         {
             var root = new TrieNode();
-
+            Debug.Log("Root");
             foreach (var p in words)
             {
                 if (string.IsNullOrEmpty(p))
                 {
+                    Debug.Log("3443");
                     continue;
                 }
                 var ch = p[0];
@@ -28,16 +55,18 @@ namespace CaomaoFramework
                 }
                 newNode.SetResults(p);
             }
+            Debug.Log("Init");
             Dictionary<TrieNode, TrieNode> links = new Dictionary<TrieNode, TrieNode>();
             foreach (var item in root.m_values)
             {
                 TryLinks(item.Value, null, links);
             }
-
+            Debug.Log("r3r3");
             foreach (var item in links)
             {
                 item.Key.Merge(item.Value, links);
             }
+            Debug.Log("r3232r");
         }
         private void TryLinks(TrieNode node, TrieNode node2, Dictionary<TrieNode, TrieNode> links)
         {

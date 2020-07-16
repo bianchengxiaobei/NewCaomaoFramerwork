@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 
@@ -8,5 +8,8 @@ namespace CaomaoFramework
     {
         void Init();
         void Update();
+
+        void AddGesture(IGestureActionCallbackBase callback);
+        void RemoveGesture(IGestureActionCallbackBase callback);
     }
 }

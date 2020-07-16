@@ -20,6 +20,10 @@ namespace UnityEditor
         private List<Object> m_paths = new List<Object>();
         private Object someType;
 
+
+        public static GUIContent presetType = 
+            EditorGUIUtility.TrTextContent("Preset Type", "The Object type this Preset can be applied to.");
+
         [MenuItem("CaomaoTools/Test窗口")]
         public static void OpenWindow()
         {
@@ -95,8 +99,10 @@ namespace UnityEditor
         {
             base.OnGUI();
 
-            this.HandlerPackableEvent();
-
+            //this.HandlerPackableEvent();
+            string presetType = "3wrwrw";
+            var rect = EditorGUI.PrefixLabel(EditorGUILayout.GetControlRect(true), OtherTestWindow.presetType);
+            EditorGUI.SelectableLabel(rect, presetType);
         }
 
 

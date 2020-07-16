@@ -27,8 +27,8 @@ public class CaomaoGIFDecoder : ICaomaoGIFDecoder
     private long m_imageDataPosition = 0;//image的Stream的读取位置
 
 
-
-
+    public int Width => this.m_width;//图像宽度
+    public int Height => this.m_height;//图像高度
 
     /// <summary>
     /// 解析GIF的头部信息

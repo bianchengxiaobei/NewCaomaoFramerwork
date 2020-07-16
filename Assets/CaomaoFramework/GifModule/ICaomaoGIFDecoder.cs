@@ -8,5 +8,7 @@ public interface ICaomaoGIFDecoder
 {
     void ReadHeader();//读取gif图片头部信息
     void SetStream(Stream stream);
+    int Width { get; }
+    int Height { get; }
 }
 

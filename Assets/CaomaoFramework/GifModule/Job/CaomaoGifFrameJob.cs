@@ -5,7 +5,7 @@ using Unity.Collections;
 using UnityEngine;
 namespace CaomaoFramework
 {
-    public class CaomaoGifFrameJob : IJob
+    public struct CaomaoGifFrameJob : IJob
     {
         //需要外部传入的变量
         public int FrameCount;
@@ -17,13 +17,14 @@ namespace CaomaoFramework
 
 
         public float delay;
-        public int blockSize = 0;
+        public int blockSize;
         public NativeArray<byte> imageData;
         public NativeArray<int> imageBigData;
         public NativeList<byte> gifData;
         public NativeArray<byte> blockData;
-        public int position;//读取的位置
 
+        public NativeArray<int> Position;//读取的位置
+        public NativeList<CaomaoGifFrame> AlreadyFrames;//已经读取的帧的数据
 
         //需要传递给外部的数据
         public NativeArray<bool> allFrameFinished;//是否所有的帧已经完成
@@ -35,37 +36,37 @@ namespace CaomaoFramework
         public int imageHeight;
 
 
-        public bool lctFlag = false;
+        public bool lctFlag;
 
-        public bool interlace = false;
+        public bool interlace;
         public NativeArray<int> act;
         public NativeArray<int> lct;
         public NativeArray<int> gct;//全局的ColorTable
 
         public CaomaoGIFImageData gifImageData;
 
-        public bool bError = false;//是否有错误
+        public bool bError;//是否有错误
 
-        public int bgIndex = 0;
-        public int transIndex = 0;
-        public bool transparency = false;
-        public int bgColor = 0;
-        public int dispose = 0;
+        public int bgIndex;
+        public int transIndex;
+        public bool transparency;
+        public int bgColor;
+        public int dispose;
 
 
 
-        public int lastDispose = 0;
+        public int lastDispose;
         public int lastImageX;
         public int lastImageY;
         public int lastImageWidth;
         public int lastImageHeigth;
-        public int lastBgColor = 0;
-        public int loopCount = 0;
+        public int lastBgColor;
+        public int loopCount;
 
 
 
 
-        public int lctSize = 0;
+        public int lctSize;
 
         public void Execute()
         {
@@ -175,12 +176,14 @@ namespace CaomaoFramework
 
         private int ReadByteToInt()
         {
-            var data = this.gifData[this.position++];
+            this.Position[0] = this.Position[0] + 1;
+            var data = this.gifData[this.Position[0]];
             return data;
         }
         private byte ReadByte()
         {
-            var data = this.gifData[this.position++];
+            this.Position[0] = this.Position[0] + 1;
+            var data = this.gifData[this.Position[0]];
             return data;
         }
 
@@ -354,7 +357,7 @@ namespace CaomaoFramework
 
         private int ReadLength(int offset, int length, out NativeArray<byte> result)
         {
-            var leftLen = this.gifData.Length - this.position;
+            var leftLen = this.gifData.Length - this.Position[0];
             Debug.Log("This.GifData.Length:" + leftLen);
             if (leftLen > length)
             {
