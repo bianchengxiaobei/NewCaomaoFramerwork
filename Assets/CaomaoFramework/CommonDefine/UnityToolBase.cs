@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
@@ -158,5 +158,56 @@ namespace CaomaoFramework
                 throw new DirectoryNotFoundException("源目录不存在！");
             }
         }
+
+        /// <summary>
+        /// 是否这个坐标有效
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <returns></returns>
+        public static bool IsVaildPos(Vector3 pos)
+        {
+            if (pos.x == float.NaN || pos.y == float.NaN || pos.z == float.NaN)
+            {
+                return true;
+            }
+            return false;
+        }
+        /// <summary>
+        /// 是否这个坐标有效
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <returns></returns>
+        public static bool IsVaildPos(Vector2 pos)
+        {
+            if (pos.x == float.NaN || pos.y == float.NaN)
+            {
+                return true;
+            }
+            return false;
+        }
+
+
+        public static bool IsVaildPos(Quaternion quat)
+        {
+            return float.IsNaN(quat.x) || float.IsNaN(quat.y) || float.IsNaN(quat.z) || float.IsNaN(quat.w);
+        }
+
+
+        public static void ClampMax(ref float val, float max)
+        {
+            if (val > max)
+            {
+                val = max;
+            }
+        }
+
+        public static void ClampMin(ref float val, float min)
+        {
+            if (val < min)
+            {
+                val = min;
+            }
+        }
+
     }
 }

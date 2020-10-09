@@ -19,7 +19,7 @@ namespace CaomaoFramework
         private void ProcessTouches(bool resetFocus)
         {
             bool firstFocus = CalculateFocus(this.m_CurrentTrackGestrueList, resetFocus);
-            UnityEngine.Debug.Log(firstFocus);
+            //UnityEngine.Debug.Log(firstFocus);
             if (firstFocus)
             {
                 this.timeBelowSpeedUnitsToRestartThresholdUnits.Reset();
@@ -51,7 +51,7 @@ namespace CaomaoFramework
                 {
                     timeBelowSpeedUnitsToRestartThresholdUnits.Reset();
                     timeBelowSpeedUnitsToRestartThresholdUnits.Start();
-                    UnityEngine.Debug.Log("Executing");
+                    //UnityEngine.Debug.Log("Executing");
                     SetState(EGestureActionCallbackState.Executing);
                 }
             }
@@ -85,7 +85,7 @@ namespace CaomaoFramework
         public override void TouchesMove()
         {
             //base.TouchesMove();
-            UnityEngine.Debug.Log("TouchMove");
+            //UnityEngine.Debug.Log("TouchMove");
             this.ProcessTouches(false);
         }
         public override void TouchesEnd()

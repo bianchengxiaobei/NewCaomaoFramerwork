@@ -1,0 +1,3 @@
+[Warning][Settings] Obfuscation is deactivated!
+[Info][None] Start Asset Revert.
+[Info][None] Finished Asset Revert.

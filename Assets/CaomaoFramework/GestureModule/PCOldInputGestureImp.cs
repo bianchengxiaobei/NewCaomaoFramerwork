@@ -206,7 +206,7 @@ namespace CaomaoFramework
         {
             if (!lost)
             {
-                Debug.LogError("AddEndTouch");
+                //Debug.LogError("AddEndTouch");
                 this.touchesEnd.Add(g);
             }
             this.m_dicPreTouchPosition.Remove(g.id);
@@ -264,12 +264,12 @@ namespace CaomaoFramework
             }
             else
             {
-                Debug.LogError("AddEndTouch1");
-                this.touchesEnd.Add(touch);
-                this.m_PrevTouches.Remove(touch);
-                this.m_dicPreTouchPosition.Remove(touch.id);
+                //Debug.LogError("AddEndTouch1");
+                this.FingersEndTouch(ref touch);
             }
         }
+
+
 
         private void ProcessMouseWheel()
         {
@@ -280,6 +280,7 @@ namespace CaomaoFramework
             var delta = Input.mouseScrollDelta;
             float scrollDelta = delta.y == 0.0f ? delta.x : delta.y * this.MouseWheelDeltaMutliplier;
             var threshold = DeviceInfo.UnitToPixels(this.MouseDistanceInUnitsRotationAndScale * 0.5f);
+            this.operatorType = EMouseOperatorType.None;
             if (this.RequireControlKeyForMouseZoom == false)
             {
                 if (delta == Vector2.zero)

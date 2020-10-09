@@ -6,13 +6,17 @@ using Unity.IO.LowLevel.Unsafe;
 using Unity.Collections;
 using System.IO;
 using CaomaoFramework;
+using System.Runtime.InteropServices;
+
 
 public class Test : MonoBehaviour
 {
     //private ReadHandle readHandle;
     //NativeArray<ReadCommand> cmds;
-    private CaomaoGifModule module = new CaomaoGifModule();
-   // public CUIScrollBroadcast a;
+    //private CaomaoGifModule module = new CaomaoGifModule();
+    // public CUIScrollBroadcast a;
+    private WordFilterModule module = new WordFilterModule();
+    private int a = 4;
     //public unsafe void Start()
     //{
     //    string filePath = Path.Combine(Application.streamingAssetsPath, "myfile.bin");
@@ -63,26 +67,65 @@ public class Test : MonoBehaviour
     //} 
     private void Awake()
     {
-        module.Init();
+        //module.Init();
+    }
+
+    private unsafe void TestCollectionHelp()
+    {
+        TestA testA;
+        testA.a = 1;
+        testA.b = 2;
+        TestA[] test = new TestA[2];
+        test[0] = testA;
+        test[1] = testA;
+        var allSize = sizeof(TestA) * test.Length;
+        var intPrt = Marshal.AllocHGlobal(allSize);
+        Marshal.StructureToPtr<TestA[]>(test, intPrt, true);
+        var hash = Test.Hash(intPrt.ToPointer(), allSize);
+        Debug.Log(hash);
+        //Marshal.Release(intPrt);
+    }
+
+    public unsafe static uint Hash(void* pointer, int bytes)
+    {
+        ulong hash = 5381u;
+        while (bytes > 0)
+        {
+            int num = --bytes;
+            ulong c = (ulong)((byte*)pointer)[num];
+            Debug.Log("c:"+c);
+            hash = (hash << 5) + hash + c;
+            Debug.Log("hash:" + hash);
+        }
+        return (uint)hash;
     }
 
     private void Start()
     {
-        //module.PlayGif("test.gif"); 
-        var test1 = new NativeArray<int>(2,Allocator.Temp);
-        for (int i = 0; i < 2; i++)
+        //module.Init();
+        //var replace = module.Replace("金三胖3r3r");
+        //Debug.Log(replace);
+        //this.TestCollectionHelp();
+        var bitArray = new UnsafeBitArray(129,Allocator.Temp);
+        bitArray.Set(0, true);
+        bitArray.Set(1, true);
+        bitArray.Set(5, true);
+        Debug.Log("Length:"+bitArray.Length);
+        for (int i = 0; i < bitArray.Length; i++)
         {
-            test1[i] = i + 1;
+            var value = bitArray.GetBits(i);
+            Debug.Log("index:"+i);
+            var value2 = bitArray.TestAll(i);
+            Debug.Log(value2);
         }
-        //var test2 = new NativeArray<byte>(2 * sizeof(int), Allocator.Temp);
-        var test2 = NativeArrayExtensions.Reinterpret<int, byte>(test1);
-        for (int i = 0; i < test2.Length; i++)
-        {
-            Debug.Log(test2[i]);
-        }
-        test1.Dispose();
-        test2.Dispose();
     }
+
+    public struct TestA
+    {
+        public int a;
+        public byte b;
+    }
+
 
 
     private void TestAction()

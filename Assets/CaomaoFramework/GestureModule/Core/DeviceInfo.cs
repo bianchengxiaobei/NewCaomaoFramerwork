@@ -28,6 +28,23 @@ public static class DeviceInfo
     {
         return unit * UnitMultiplier;
     }
+    /// <summary>
+    /// 像素转成unit
+    /// </summary>
+    /// <param name="pixels"></param>
+    /// <returns></returns>
+    public static float PixelsToUnit(float pixels)
+    {
+        return pixels * oneOverUnitMultiplier;
+    }
+
+    public static Vector2 PixelsToUnit(Vector2 pixelsVector)
+    {
+        Vector2 result = Vector2.zero;
+        result.x = pixelsVector.x * oneOverUnitMultiplier;
+        result.y = pixelsVector.y * oneOverUnitMultiplier;
+        return result;
+    }
 
 }
 

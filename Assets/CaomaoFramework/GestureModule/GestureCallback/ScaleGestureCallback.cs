@@ -9,7 +9,9 @@ namespace CaomaoFramework
         private const float minimumScaleResolutionSquared = 1.005f; // incremental changes
         private const float stationaryScaleResolutionSquared = 1.05f; // change from idle
         private const float stationaryTimeSeconds = 0.1f; // if stationary for this long, use stationaryScaleResolutionSquared else minimumScaleResolutionSquared
-        private const float hysteresisScaleResolutionSquared = 1.15f; // higher values resist scaling in the opposite direction more
+        // higher values resist scaling in the opposite direction more
+        //private const float hysteresisScaleResolutionSquared = 1.15f; 
+        private const float hysteresisScaleResolutionSquared = 1.6f;
         private const int resetDirectionMilliseconds = 300;
 
         // the min amount that can scale down each update
@@ -82,10 +84,8 @@ namespace CaomaoFramework
         private void ProcessTouches()
         {
             CalculateFocus(this.m_CurrentTrackGestrueList);
-
             if (!TrackedTouchCountIsWithinRange)
             {
-                UnityEngine.Debug.Log("fewfwe");
                 return;
             }
 
@@ -93,7 +93,6 @@ namespace CaomaoFramework
                 this.m_CurrentTrackGestrueList[1].x, this.m_CurrentTrackGestrueList[1].y);
             float distanceX = DistanceVector(this.m_CurrentTrackGestrueList[0].x - this.m_CurrentTrackGestrueList[1].x);
             float distanceY = DistanceVector(this.m_CurrentTrackGestrueList[0].y - this.m_CurrentTrackGestrueList[1].y);
-
             if (State == EGestureActionCallbackState.Possible)
             {
                 if (previousDistance == 0.0f)

@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-
+using UnityEngine;
 
 namespace CaomaoFramework
 {
@@ -16,8 +16,13 @@ namespace CaomaoFramework
         public static EGestureType GestureType = EGestureType.e_2D;
         public void Init()
         {
-            //this.m_oImp = new MobileInputGestureImp();
+            DeviceInfo.UnitMultiplier = Screen.dpi;
+#if UNITY_EDITOR
             this.m_oImp = new PCOldInputGestureImp();
+#elif UNITY_ANDROID
+            this.m_oImp = new MobileInputGestureImp();
+#endif
+
             this.m_oImp.Init();
         }
 

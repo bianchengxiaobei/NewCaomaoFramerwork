@@ -1,4 +1,4 @@
-﻿using Boo.Lang;
+
 using Sirenix.Serialization;
 using System;
 using System.Collections;

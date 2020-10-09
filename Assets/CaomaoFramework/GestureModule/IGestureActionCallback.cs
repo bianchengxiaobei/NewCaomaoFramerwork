@@ -224,6 +224,7 @@ namespace CaomaoFramework
             //Debug.LogError("Current:" + this.m_CurrentTrackGestrueList.Count);
             if (inte == false)
             {
+                //Debug.LogError("TouchIntersect:"+this.m_CurrentTrackGestrueList.Count);
                 return;
             }
             //else if (this.State == EGestureActionCallbackState.Ended ||
@@ -232,11 +233,13 @@ namespace CaomaoFramework
                 || (this.State != EGestureActionCallbackState.Executing && this.State != EGestureActionCallbackState.Began
                 && this.State != EGestureActionCallbackState.Possible))
             {
+                Debug.LogError(this.m_CurrentTrackGestrueList.Count);
+                Debug.LogError("Max:" + this.MaximumNumberOfTouchesToTrack);
                 this.SetState(EGestureActionCallbackState.Failed);
             }
             else if (!this.EndGestureRestart(touches))
             {
-                //Debug.Log("Move");
+                //Debug.LogError("ScaleMove");
                 this.UpdateTrackGesture(touches);
                 this.TouchesMove();
             }
@@ -328,7 +331,7 @@ namespace CaomaoFramework
         }
         public bool SetState(EGestureActionCallbackState state)
         {
-            Debug.Log("SetState:" + state);
+            //Debug.Log("SetState:"+state);
             if (state == EGestureActionCallbackState.Failed)
             {
                 //Debug.LogError("SetFailed");
@@ -572,10 +575,8 @@ namespace CaomaoFramework
         {
             if (touches == null || touches.Count == 0)
             {
-                Debug.LogError("No Touch");
                 return;
             }
-            Debug.LogError("End:" + touches.Count);
             //if (this.State == EGestureActionCallbackState.Ended || this.State == EGestureActionCallbackState.EndPending)
             //{
             //    this.SetState(EGestureActionCallbackState.Failed);
@@ -585,8 +586,6 @@ namespace CaomaoFramework
                 State != EGestureActionCallbackState.Began &&
                 State != EGestureActionCallbackState.Executing))
             {
-                Debug.LogError("Failed:" + this.State);
-                Debug.LogError("trackFailed:" + this.m_CurrentTrackGestrueList.Count);
                 this.FailedGestureNow();
             }
             else if (this.TouchesIntersect(touches, this.m_CurrentTrackGestrueList))
@@ -610,7 +609,7 @@ namespace CaomaoFramework
                 {
                     if (this.m_CurrentTrackGestrueList[i].id == t.id)
                     {
-                        Debug.LogError("RemoveTrack:" + t.id);
+                        //Debug.LogError("RemoveTrack:" + t.id);
                         this.m_CurrentTrackGestrueList.RemoveAt(i);
                         count++;
                         break;
