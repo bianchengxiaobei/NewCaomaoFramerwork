@@ -6,8 +6,9 @@ using System.IO;
 /// </summary>
 public interface ICaomaoGIFDecoder
 {
-    void ReadHeader();//读取gif图片头部信息
-    void SetStream(Stream stream);
+    void Init(Stream stream);//初始化nativeArray等集合数据
+    //void ReadHeader();//读取gif图片头部信息
+    void Decode();
     int Width { get; }
     int Height { get; }
 }

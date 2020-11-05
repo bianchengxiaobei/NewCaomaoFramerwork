@@ -6,7 +6,7 @@ using Unity.Collections;
 /// </summary>
 public struct CaomaoGifFrame
 {
-    public NativeList<byte> imageData;//每帧的图像数据
+    public NativeArray<byte> imageData;//每帧的图像数据
     public float delay;//每帧的时间延迟
 }
 

@@ -6,79 +6,70 @@ using UnityEngine;
 namespace CaomaoFramework
 {
     public struct CaomaoGifFrameJob : IJob
-    {
-        //需要外部传入的变量
-        public int FrameCount;
-        public int GifWidth;
-        public int GifHeigth;
-
-
-
-
-
-        public float delay;
-        public int blockSize;
-        public NativeArray<byte> imageData;
-        public NativeArray<int> imageBigData;
-        public NativeList<byte> gifData;
-        public NativeArray<byte> blockData;
-
-        public NativeArray<int> Position;//读取的位置
-        public NativeList<CaomaoGifFrame> AlreadyFrames;//已经读取的帧的数据
-
+    {                                   
         //需要传递给外部的数据
-        public NativeArray<bool> allFrameFinished;//是否所有的帧已经完成
-        public NativeArray<int> allFrameCount;//所有帧的数量
+        public NativeList<int> Position;//读取的位置
+        public NativeList<bool> AllFrameFinished;//是否所有的帧已经完成
+        public NativeList<int> AllFrameCount;//所有帧的数量
+        public NativeList<CaomaoGifFrame> AlreadyFrames;//已经读取的帧的数据
+        //全局数据    
+        public NativeList<byte> GifStreamData;//Gif的流数据
+        public NativeList<int> GifHeigth;//全局的高度
+        public NativeList<int> GifWidth;//全局的宽度
+        public NativeList<int> GobalBgColor;//全局背景颜色ColorTable
+        public NativeList<int> LastDispose;//上一帧的数据
+        public NativeList<int> LastImageX;
+        public NativeList<int> LastImageY;
+        public NativeList<int> LastImageWidth;
+        public NativeList<int> LastImageHeigth;
+        public NativeList<int> LastBgColor;
 
-        public int imageX;
-        public int imageY;
-        public int imageWidth;
-        public int imageHeight;
+        private NativeArray<byte> imageBigData;
+        private NativeArray<int> imageData;
 
+    
+        private int imageX;
+        private int imageY;
+        private int imageWidth;
+        private int imageHeight;
 
-        public bool lctFlag;
+        private bool lctFlag;
+        private int lctSize;
+        private bool interlace;
+        private int dispose;
 
-        public bool interlace;
-        public NativeArray<int> act;
-        public NativeArray<int> lct;
-        public NativeArray<int> gct;//全局的ColorTable
+        private float delay;
+        private bool transparency;
+        private int bgIndex;//背景颜色索引
+        private int blockSize;
+        private int transIndex;
+        private int loopCount;
+
+        private NativeArray<byte> blockData;
+        private NativeArray<int> lct;
+        private NativeArray<int> act;
 
         public CaomaoGIFImageData gifImageData;
 
         public bool bError;//是否有错误
 
-        public int bgIndex;
-        public int transIndex;
-        public bool transparency;
-        public int bgColor;
-        public int dispose;
+        private bool m_Finished;//是image解析完成
 
-
-
-        public int lastDispose;
-        public int lastImageX;
-        public int lastImageY;
-        public int lastImageWidth;
-        public int lastImageHeigth;
-        public int lastBgColor;
-        public int loopCount;
-
-
-
-
-        public int lctSize;
 
         public void Execute()
         {
-
+            while (this.m_Finished == false)
+            {
+                this.ReadNextFrame();
+            }            
         }
         /// <summary>
         /// 分配image数据
         /// </summary>
         public void AlloctorImageData()
         {
-            this.imageBigData = new NativeArray<int>(this.imageWidth * this.imageHeight, Allocator.TempJob);
-            this.imageData = new NativeList<byte>(this.imageWidth * this.imageHeight * sizeof(int), Allocator.TempJob);
+            this.imageData = new NativeArray<int>(this.imageWidth * this.imageHeight, Allocator.TempJob);
+            this.imageBigData = new NativeList<byte>(this.imageWidth * this.imageHeight * sizeof(int), Allocator.TempJob);
         }
         /// <summary>
         /// 应用的扩展部分
@@ -116,7 +107,7 @@ namespace CaomaoFramework
             } while ((this.blockSize > 0) && !this.bError);
         }
 
-        private void ReadNextFrame(int position)
+        private void ReadNextFrame()
         {
             //this.position++;
             //var code = this.gifData[this.position];
@@ -142,12 +133,13 @@ namespace CaomaoFramework
                     }
                     break;
                 case 0x3b://终止的标志
-
+                    this.AllFrameFinished[0] = true;
                     break;
                 case 0x00:
                     break;
                 default:
                     //表示出错
+                    this.bError = true;
                     break;
             }
         }
@@ -177,13 +169,13 @@ namespace CaomaoFramework
         private int ReadByteToInt()
         {
             this.Position[0] = this.Position[0] + 1;
-            var data = this.gifData[this.Position[0]];
+            var data = this.GifStreamData[this.Position[0]];
             return data;
         }
         private byte ReadByte()
         {
             this.Position[0] = this.Position[0] + 1;
-            var data = this.gifData[this.Position[0]];
+            var data = this.GifStreamData[this.Position[0]];
             return data;
         }
 
@@ -250,10 +242,10 @@ namespace CaomaoFramework
             }
             else
             {
-                this.act = this.gct;
+                this.act = this.GobalBgColor;
                 if (this.bgIndex == this.transIndex)
                 {
-                    this.bgColor = 0;
+                    this.GobalBgColor[0] = 0;
                 }
             }
             var save = 0;
@@ -277,61 +269,104 @@ namespace CaomaoFramework
             this.AlloctorImageData();
             this.SetPixels();
 
-            this.imageData = NativeArrayExtensions.Reinterpret<int, byte>(this.imageBigData);
-
+            this.imageBigData = NativeArrayExtensions.Reinterpret<int, byte>(this.imageData);
+            var frame = new CaomaoGifFrame();
+            frame.delay = this.delay;
+            frame.imageData = this.imageBigData;
+            this.AlreadyFrames.Add(frame);
+            this.AllFrameCount[0] = this.AllFrameCount[0] + 1;
+            if (this.transparency)
+            {
+                this.act[this.transIndex] = save;
+            }
+            this.m_Finished = true;
         }
 
         private void SetPixels()
         {
-            if (this.lastDispose > 0)
+            if (this.LastDispose[0] > 0)
             {
                 //说明上一帧已经有图像了
-                var n = this.FrameCount - 1;
+                var n = this.AllFrameCount[0] - 1;
                 if (n > 0)
                 {
                     //说明还有图像帧
-                    if (this.lastDispose == 2)
+                    if (this.LastDispose[0] == 2)
                     {
-                        var fillcolor = this.transparency ? 0 : this.lastBgColor;
-                        for (var i = 0; i < this.lastImageHeigth; i++)
+                        var fillcolor = this.transparency ? 0 : this.LastBgColor[0];
+                        for (var i = 0; i < this.LastImageHeigth[0]; i++)
                         {
                             var line = i;
-                            line += this.lastImageY;
-                            if (line >= this.GifHeigth) continue;
-                            var linein = this.GifHeigth - line - 1;
-                            var dx = linein * this.GifWidth + this.lastImageX;
-                            var endx = dx + this.lastImageWidth;
+                            line += this.LastImageY[0];
+                            if (line >= this.GifHeigth[0]) continue;
+                            var linein = this.GifHeigth[0] - line - 1;
+                            var dx = linein * this.GifWidth[0] + this.LastImageX[0];
+                            var endx = dx + this.LastImageWidth[0];
                             while (dx < endx)
                             {
-                                this.imageBigData[dx++] = fillcolor;
+                                this.imageData[dx++] = fillcolor;
                             }
                         }
-                        //for (var i = 0; i < _lih; i++)
-                        //{
-                        //    var line = i;
-                        //    line += _liy;
-                        //    if (line >= _height) continue;
-                        //    var linein = _height - line - 1;
-                        //    var dx = linein * _width + _lix;
-                        //    var endx = dx + _liw;
-                        //    while (dx < endx)
-                        //    {
-                        //        _image[dx++] = fillcolor;
-                        //    }
-                        //}
                     }               
+                }
+            }
+            // copy each source line to the appropriate place in the destination
+            var pass = 1;
+            var inc = 8;
+            var iline = 0;
+            for (var i = 0; i < this.imageHeight; i++)
+            {
+                var line = i;
+                if (this.interlace)
+                {
+                    if (iline >= this.imageHeight)
+                    {
+                        pass++;
+                        switch (pass)
+                        {
+                            case 2:
+                                iline = 4;
+                                break;
+                            case 3:
+                                iline = 2;
+                                inc = 4;
+                                break;
+                            case 4:
+                                iline = 1;
+                                inc = 2;
+                                break;
+                        }
+                    }
+                    line = iline;
+                    iline += inc;
+                }
+                line += this.imageY;
+                if (line >= this.GifHeigth[0]) continue;
+
+                var sx = i * this.imageWidth; // start of line in source
+                var linein = this.GifHeigth[0] - line - 1;
+                var dx = linein * this.GifWidth[0] + this.imageX;
+                var endx = dx + this.imageWidth;
+
+                for (; dx < endx; dx++)
+                {
+                    var c = this.act[this.gifImageData.m_pixels[sx++] & 0xff];
+                    if (c != 0)
+                    {
+                        this.imageData[dx] = c;
+                    }
                 }
             }
         }
 
         private void ResetFrame()
         {
-            this.lastDispose = dispose;
-            this.lastImageX = this.imageX;
-            this.lastImageY = this.imageY;
-            this.lastImageWidth = this.imageWidth;
-            this.lastImageHeigth = this.imageHeight;
-            this.lastBgColor = this.bgColor;
+            this.LastDispose[0] = dispose;
+            this.LastImageX[0] = this.imageX;
+            this.LastImageY[0] = this.imageY;
+            this.LastImageWidth[0] = this.imageWidth;
+            this.LastImageHeigth[0] = this.imageHeight;
+            this.LastBgColor[0] = this.GobalBgColor[0];
             this.lct.Dispose();//销毁集合
         }
 
@@ -357,12 +392,12 @@ namespace CaomaoFramework
 
         private int ReadLength(int offset, int length, out NativeArray<byte> result)
         {
-            var leftLen = this.gifData.Length - this.Position[0];
+            var leftLen = this.GifStreamData.Length - this.Position[0];
             Debug.Log("This.GifData.Length:" + leftLen);
             if (leftLen > length)
             {
                 result = new NativeArray<byte>(length, Allocator.TempJob);
-                if (result != null && this.gifData.Length > 0)
+                if (result != null && this.GifStreamData.Length > 0)
                 {
                     for (int i = 0; i < result.Length; i++)
                     {

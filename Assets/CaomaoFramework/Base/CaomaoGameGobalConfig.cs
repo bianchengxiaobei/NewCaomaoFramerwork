@@ -18,7 +18,6 @@ namespace CaomaoFramework
         [LabelText("配置文件所在的文件目录")]
         public string ConfigPathDir;
         [LabelText("GIF文件所在的文件目录")]
-        [FolderPath(AbsolutePath =true)]
         public string GIFLoadPathDir;
     }
 }
